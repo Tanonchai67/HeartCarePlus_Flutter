@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:heartcare_plus/main.dart';
+import 'package:heartcare_plus/login/home_login.dart';
 import 'package:heartcare_plus/pages/setting/profile.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -75,7 +75,7 @@ class SettingsPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const HeartCarePlusApp()),
+                    MaterialPageRoute(builder: (context) => const HomeLogin()),
                   );
                 },
                 style: ElevatedButton.styleFrom(

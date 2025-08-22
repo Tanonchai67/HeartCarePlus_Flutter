@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartcare_plus/home.dart';
+
 import 'forget_pass.dart';
 
 class Loginpage extends StatefulWidget {
@@ -104,9 +105,17 @@ class _LoginPageState extends State<Loginpage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
+                  elevation: 10,
+                  shadowColor: Colors.black,
                 ),
-                child:
-                    const Text('เข้าสู่ระบบ', style: TextStyle(fontSize: 16)),
+                child: const Text(
+                  'เข้าสู่ระบบ',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
               ),
 
               const SizedBox(height: 12),

@@ -1,7 +1,7 @@
 name: heartcare_plus
-description: "A new Flutter project."
+description: "heartcare_plus"
 
-publish_to: 'none' 
+publish_to: 'none'
 
 environment:
   sdk: ^3.5.4
@@ -16,7 +16,7 @@ dependencies:
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
-  flutter_test: 
+  flutter_test:
     sdk: flutter
 
   flutter_lints: ^4.0.0

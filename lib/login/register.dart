@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class Registorpage extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController lastnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -29,7 +30,7 @@ class Registorpage extends StatelessWidget {
               const Icon(Icons.favorite, color: Colors.red, size: 60),
               const SizedBox(height: 12),
               const Text(
-                'สมัครใช้งาน HeartCare Plus',
+                'สมัครใช้งาน HeartCarePlus',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 24),
@@ -38,7 +39,18 @@ class Registorpage extends StatelessWidget {
               TextField(
                 controller: nameController,
                 decoration: InputDecoration(
-                  labelText: 'ชื่อ-นามสกุล',
+                  labelText: 'ชื่อ',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  prefixIcon: const Icon(Icons.person),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              TextField(
+                controller: lastnameController,
+                decoration: InputDecoration(
+                  labelText: 'นามสกุล',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12)),
                   prefixIcon: const Icon(Icons.person),
@@ -86,9 +98,17 @@ class Registorpage extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
+                  elevation: 10,
+                  shadowColor: Colors.black,
                 ),
-                child:
-                    const Text('สมัครสมาชิก', style: TextStyle(fontSize: 16)),
+                child: const Text(
+                  'ลงทะเบียน',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
               ),
 
               const SizedBox(height: 12),
