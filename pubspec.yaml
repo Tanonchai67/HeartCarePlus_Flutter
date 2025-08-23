@@ -7,6 +7,9 @@ environment:
   sdk: ^3.5.4
 
 dependencies:
+  firebase_auth: ^6.0.1
+  firebase_core: ^4.0.0
+  form_field_validator: ^1.1.0
   table_calendar: ^3.0.9
   intl: ^0.20.2
   auto_size_text: ^3.0.0

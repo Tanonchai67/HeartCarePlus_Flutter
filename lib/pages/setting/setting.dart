@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:heartcare_plus/login/home_login.dart';
 import 'package:heartcare_plus/pages/setting/profile.dart';
@@ -72,11 +73,14 @@ class SettingsPage extends StatelessWidget {
                 icon: const Icon(Icons.logout, color: Colors.red),
                 label: const Text("ออกจากระบบ",
                     style: TextStyle(color: Colors.red)),
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeLogin()),
-                  );
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut().then((value) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomeLogin()),
+                    );
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,

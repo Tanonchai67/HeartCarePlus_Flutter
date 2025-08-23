@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "83584717380",
+    "project_id": "heartcareplus68",
+    "storage_bucket": "heartcareplus68.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:83584717380:android:b9b0002815eb3aec802211",
+        "android_client_info": {
+          "package_name": "com.example.hcp2025"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUy0hTqQDyRAvdLC_NjU7XIps1A5Ve2Lo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

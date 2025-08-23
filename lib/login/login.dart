@@ -1,140 +1,189 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:heartcare_plus/home.dart';
-
-import 'forget_pass.dart';
+import 'package:heartcare_plus/login/forget_pass.dart';
+import 'package:heartcare_plus/model/users.dart';
 
 class Loginpage extends StatefulWidget {
-  const Loginpage({super.key});
+  Loginpage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _LoginPageState createState() => _LoginPageState();
+  State<Loginpage> createState() => _LoginpageState();
 }
 
-class _LoginPageState extends State<Loginpage> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
+class _LoginpageState extends State<Loginpage> {
+  final formkey = GlobalKey<FormState>();
+  Users users = Users(email: '', pass: '');
+  final Future<FirebaseApp> firebase = Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('เข้าสู่ระบบ'),
-        backgroundColor: Colors.redAccent,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const Icon(Icons.favorite, color: Colors.red, size: 60),
-              const SizedBox(height: 12),
-              const Text(
-                'HeartCare Plus',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 24),
-              // Email Field
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'อีเมล',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.email),
-                ),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'กรุณากรอกอีเมล';
-                  }
-                  if (!value.contains('@')) {
-                    return 'รูปแบบอีเมลไม่ถูกต้อง';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
+    return FutureBuilder(
+      future: firebase,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text("Error"),
+            ),
+            body: Center(
+              child: Text("${snapshot.error}"),
+            ),
+          );
+        }
 
-              // Password Field
-              TextFormField(
-                controller: _passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'รหัสผ่าน',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock),
-                ),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'กรุณากรอกรหัสผ่าน';
-                  }
-                  if (value.length < 6) {
-                    return 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 30),
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // กำลังโหลด
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
 
-              // Login Button
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
-                  );
-                  // Logic การสมัคร
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text('สมัครสำเร็จ (ตัวอย่าง)'),
-                  ));
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.redAccent,
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 10,
-                  shadowColor: Colors.black,
-                ),
-                child: const Text(
-                  'เข้าสู่ระบบ',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              // Forgot Password Link
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const ForgotPasswordPage()),
-                  );
-                },
-                child: const Text('ลืมรหัสผ่าน?'),
-              ),
-            ],
+        // snapshot สำเร็จ
+        return Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            title: const Text('เข้าสู่ระบบ'),
+            backgroundColor: Colors.redAccent,
           ),
-        ),
-      ),
+          body: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const Icon(Icons.favorite, color: Colors.red, size: 60),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'HeartCarePlus',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 24),
+
+                  Form(
+                    key: formkey,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          validator: MultiValidator([
+                            RequiredValidator(errorText: "กรุณาป้อนอีเมล"),
+                            EmailValidator(
+                                errorText: "รูปแบบอีเมลไม่ถูกต้อง *@gmail.com")
+                          ]),
+                          onSaved: (String? email) {
+                            users.email = email ?? '';
+                          },
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                            labelText: 'อีเมล',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            prefixIcon: const Icon(Icons.email),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          validator:
+                              RequiredValidator(errorText: "กรุณาป้อนรหัสผ่าน"),
+                          onSaved: (String? pass) {
+                            users.pass = pass ?? '';
+                          },
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            labelText: 'รหัสผ่าน',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            prefixIcon: const Icon(Icons.lock),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        ElevatedButton(
+                          onPressed: () async {
+                            if (formkey.currentState?.validate() ?? false) {
+                              formkey.currentState?.save();
+                              try {
+                                await FirebaseAuth.instance
+                                    .signInWithEmailAndPassword(
+                                        email: users.email,
+                                        password: users.pass)
+                                    .then((value) {
+                                  formkey.currentState?.reset();
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return HomePage();
+                                  }));
+                                });
+                              } on FirebaseAuthException catch (e) {
+                                String message = '';
+                                if (e.code == 'invalid-credential') {
+                                  message = 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
+                                } else {
+                                  message = e.message ?? 'เกิดข้อผิดพลาด';
+                                }
+
+                                // แจ้งเตือน error
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text("ผิดพลาด"),
+                                      content: Text(message),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text("ตกลง"),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.redAccent,
+                            minimumSize: const Size(double.infinity, 50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 10,
+                            shadowColor: Colors.black,
+                          ),
+                          child: const Text(
+                            'เข้าสู่ระบบ',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+                    ),
+                  ),
+                  // ลิงก์ย้อนกลับ
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ForgotPasswordPage()),
+                      );
+                    },
+                    child: const Text('ลืมรหัสผ่าน?'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

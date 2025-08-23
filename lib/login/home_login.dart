@@ -60,7 +60,7 @@ class HomeLogin extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Registorpage()),
+                      MaterialPageRoute(builder: (context) => Registerpage()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -93,7 +93,7 @@ class HomeLogin extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const Loginpage()),
+                            builder: (context) => Loginpage()),
                       );
                     },
                     style: ElevatedButton.styleFrom(
