@@ -111,10 +111,12 @@ class _LoginpageState extends State<Loginpage> {
                                         password: users.pass)
                                     .then((value) {
                                   formkey.currentState?.reset();
-                                  Navigator.pushReplacement(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return HomePage();
-                                  }));
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const HomePage()),
+                                    (route) => false,
+                                  );
                                 });
                               } on FirebaseAuthException catch (e) {
                                 String message = '';
@@ -173,7 +175,7 @@ class _LoginpageState extends State<Loginpage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const ForgotPasswordPage()),
+                            builder: (context) => ForgetpassPage()),
                       );
                     },
                     child: const Text('ลืมรหัสผ่าน?'),

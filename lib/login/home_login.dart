@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:heartcare_plus/login/login.dart';
 import 'package:heartcare_plus/login/register.dart';
 
@@ -7,6 +8,13 @@ class HomeLogin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.grey, // สีของแถบสเตตัส
+        statusBarIconBrightness: Brightness.dark, // ไอคอนสีเข้ม
+      ),
+    );
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -92,8 +100,7 @@ class HomeLogin extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => Loginpage()),
+                        MaterialPageRoute(builder: (context) => Loginpage()),
                       );
                     },
                     style: ElevatedButton.styleFrom(

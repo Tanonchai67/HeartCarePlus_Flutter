@@ -110,7 +110,6 @@ class _RegisterpageState extends State<Registerpage> {
                                 )
                                     .then((value) {
                                   formkey.currentState?.reset();
-
                                   // แจ้งเตือนแบบเด้งกลางจอ
                                   showDialog(
                                     context: context,
@@ -130,6 +129,7 @@ class _RegisterpageState extends State<Registerpage> {
                                     },
                                   );
                                 });
+                                await FirebaseAuth.instance.signOut();
                               } on FirebaseAuthException catch (e) {
                                 String message = '';
                                 if (e.code == 'weak-password') {

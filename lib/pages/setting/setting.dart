@@ -75,10 +75,11 @@ class SettingsPage extends StatelessWidget {
                     style: TextStyle(color: Colors.red)),
                 onPressed: () async {
                   await FirebaseAuth.instance.signOut().then((value) {
-                    Navigator.pushReplacement(
+                    Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const HomeLogin()),
+                      (route) => false,
                     );
                   });
                 },
