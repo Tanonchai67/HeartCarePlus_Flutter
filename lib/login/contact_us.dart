@@ -32,7 +32,7 @@ class ContactUs extends StatelessWidget {
               SizedBox(height: 30),
               // Header
               Text(
-                'ช้อมูลติดต่อ',
+                'ข้อมูลติดต่อ',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,

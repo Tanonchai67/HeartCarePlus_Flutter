@@ -162,7 +162,7 @@ class _HomePageState extends State<HomePage> {
             ),
 
             const Text(
-              'ข้อมูลต่างๆ',
+              'ข้อมูลสุขภาพ',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,

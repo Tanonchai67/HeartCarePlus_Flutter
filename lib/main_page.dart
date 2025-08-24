@@ -29,37 +29,40 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _pages,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color.fromARGB(255, 253, 253, 253),
-        selectedItemColor: Colors.red,
-        unselectedItemColor: Colors.black,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'หน้าหลัก',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: 'เพิ่มข้อมูล',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
-            label: 'BMI',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.library_books),
-            label: 'บทความ',
-          ),
-        ],
-      ),
-    );
+    return SafeArea(
+        child: Scaffold(
+            resizeToAvoidBottomInset: true,
+            body: IndexedStack(
+              index: _selectedIndex,
+              children: _pages,
+            ),
+            bottomNavigationBar: SafeArea(
+              child: BottomNavigationBar(
+                backgroundColor: const Color.fromARGB(255, 253, 253, 253),
+                selectedItemColor: Colors.red,
+                unselectedItemColor: Colors.black,
+                type: BottomNavigationBarType.fixed,
+                currentIndex: _selectedIndex,
+                onTap: _onItemTapped,
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.home),
+                    label: 'หน้าหลัก',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.add),
+                    label: 'เพิ่มข้อมูล',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.bar_chart),
+                    label: 'BMI',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.library_books),
+                    label: 'บทความ',
+                  ),
+                ],
+              ),
+            )));
   }
 }
