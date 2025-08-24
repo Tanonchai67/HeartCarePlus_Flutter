@@ -24,7 +24,7 @@ class _RegisterpageState extends State<Registerpage> {
         if (snapshot.hasError) {
           return Scaffold(
             appBar: AppBar(
-              title: Text("Error"),
+              title: const Text("Error"),
             ),
             body: Center(
               child: Text("${snapshot.error}"),
@@ -34,7 +34,7 @@ class _RegisterpageState extends State<Registerpage> {
 
         if (snapshot.connectionState == ConnectionState.waiting) {
           // กำลังโหลด
-          return Scaffold(
+          return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
             ),
@@ -144,6 +144,8 @@ class _RegisterpageState extends State<Registerpage> {
                                       'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร';
                                 } else if (e.code == 'email-already-in-use') {
                                   message = 'อีเมลนี้ถูกใช้แล้ว';
+                                } else if (e.code == 'network-request-failed') {
+                                  message = 'ไม่มีการเชื่อมต่ออินเทอร์เน็ต';
                                 } else {
                                   message = e.message ?? 'เกิดข้อผิดพลาด';
                                 }

@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:heartcare_plus/home.dart';
 import 'package:heartcare_plus/login/forget_pass.dart';
+import 'package:heartcare_plus/main_page.dart';
 import 'package:heartcare_plus/model/users.dart';
 
 class Loginpage extends StatefulWidget {
@@ -116,12 +116,23 @@ class _LoginpageState extends State<Loginpage> {
                                     .signInWithEmailAndPassword(
                                         email: users.email,
                                         password: users.pass)
-                                    .then((value) {
+                                    .then((value) async {
                                   formkey.currentState?.reset();
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (context) {
+                                      return const Center(
+                                          child: CircularProgressIndicator());
+                                    },
+                                  );
+                                  await Future.delayed(
+                                      const Duration(seconds: 2));
+                                  Navigator.pop(context);
                                   Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const HomePage()),
+                                        builder: (context) => const MainPage()),
                                     (route) => false,
                                   );
                                 });
@@ -129,6 +140,8 @@ class _LoginpageState extends State<Loginpage> {
                                 String message = '';
                                 if (e.code == 'invalid-credential') {
                                   message = 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
+                                } else if (e.code == 'network-request-failed') {
+                                  message = 'ไม่มีการเชื่อมต่ออินเทอร์เน็ต';
                                 } else {
                                   message = e.message ?? 'เกิดข้อผิดพลาด';
                                 }

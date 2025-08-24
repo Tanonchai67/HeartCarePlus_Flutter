@@ -105,9 +105,19 @@ class ForgetPassPage extends StatelessWidget {
                                 await FirebaseAuth.instance
                                     .sendPasswordResetEmail(
                                         email: users.email.trim())
-                                    .then((value) {
+                                    .then((value) async {
                                   formkey.currentState?.reset();
-
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (context) {
+                                      return const Center(
+                                          child: CircularProgressIndicator());
+                                    },
+                                  );
+                                  await Future.delayed(
+                                      const Duration(seconds: 2));
+                                  Navigator.pop(context);
                                   showDialog(
                                     context: context,
                                     builder: (context) {
@@ -130,7 +140,10 @@ class ForgetPassPage extends StatelessWidget {
                               } on FirebaseAuthException catch (e) {
                                 String message = '';
                                 if (e.code == 'firebase_auth/user-not-found') {
-                                  message = 'ไม่พบอีเมล';
+                                  message =
+                                      'ไม่มีบัญชีผู้ใช้ที่ตรงกับอีเมลที่กรอก';
+                                } else if (e.code == 'network-request-failed') {
+                                  message = 'ไม่มีการเชื่อมต่ออินเทอร์เน็ต';
                                 } else {
                                   message = e.message ?? 'เกิดข้อผิดพลาด';
                                 }

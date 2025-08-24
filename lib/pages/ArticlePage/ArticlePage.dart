@@ -1,4 +1,3 @@
-// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import 'package:heartcare_plus/pages/ArticlePage/ArtiicleDetail.dart';
 
@@ -10,20 +9,14 @@ class ArticlePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F7),
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 1,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
+        title: const Text('บทความ'),
+        titleTextStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 30,
+          color: Colors.black,
         ),
-        title: const Text('บทความ', style: TextStyle(color: Colors.black)),
-        centerTitle: true,
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: Icon(Icons.favorite, color: Colors.red),
-          ),
-        ],
+        backgroundColor: const Color(0xFFF2F2F7),
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
