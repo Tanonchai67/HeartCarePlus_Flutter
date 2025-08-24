@@ -1,12 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:heartcare_plus/pages/ArticlePage/ArticlePage.dart';
-import 'package:heartcare_plus/pages/BMI/bmi.dart';
-import 'package:heartcare_plus/insert.dart';
-import 'package:heartcare_plus/pages/setting/setting.dart';
-import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/material.dart';
+import 'package:heartcare_plus/pages/setting/setting.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -39,32 +36,50 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            const SizedBox(
+              height: 25,
+            ),
+
+            Row(
               children: [
-                CircleAvatar(
-                  radius: 30,
+                const CircleAvatar(
+                  radius: 45,
                   backgroundImage: AssetImage('assets/Doctor.png'),
                 ),
-                SizedBox(width: 12),
-                Expanded(
+                const SizedBox(width: 12),
+                const Expanded(
                   child: AutoSizeText(
-                    'สวัสดี นายสมชาย เมืองไทย',
+                    'ยินดีต้อนรับ \nคุณ โฟโต้',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
-                    maxLines: 1,
+                    maxLines: 2,
                     minFontSize: 12,
                     maxFontSize: 24,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                    icon: const Icon(Icons.settings),
+                    iconSize: 35,
+                    tooltip: 'ตั้งค่า',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SettingsPage()),
+                      );
+                    },
+                  ),
+                ),
               ],
             ),
-
-            const SizedBox(height: 20),
-            const SizedBox(height: 20),
-
+            const SizedBox(
+              height: 20,
+            ),
             Center(
               child: Card(
                 elevation: 3,
@@ -93,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
 
             const Text(
               'ปฏิทิน',
@@ -102,66 +117,77 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 10),
 
             // ปฏิทิน
-            TableCalendar(
-              locale: 'th_TH',
-              firstDay: DateTime.utc(2000, 1, 1),
-              lastDay: DateTime.utc(2100, 12, 31),
-              focusedDay: _focusedDay,
-              selectedDayPredicate: (day) {
-                return isSameDay(_selectedDay, day);
-              },
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(() {
-                  _selectedDay = selectedDay;
-                  _focusedDay = focusedDay;
-                });
-              },
-              calendarStyle: const CalendarStyle(
-                todayDecoration: BoxDecoration(
-                  color: Colors.orange,
-                  shape: BoxShape.circle,
+            SizedBox(
+              height: 400,
+              width: 400,
+              child: TableCalendar(
+                locale: 'th_TH',
+                firstDay: DateTime.utc(2000, 1, 1),
+                lastDay: DateTime.utc(2100, 12, 31),
+                focusedDay: _focusedDay,
+                selectedDayPredicate: (day) {
+                  return isSameDay(_selectedDay, day);
+                },
+                onDaySelected: (selectedDay, focusedDay) {
+                  setState(() {
+                    _selectedDay = selectedDay;
+                    _focusedDay = focusedDay;
+                  });
+                },
+                rowHeight: 45,
+                daysOfWeekHeight: 30,
+                calendarStyle: const CalendarStyle(
+                  todayDecoration: BoxDecoration(
+                    color: Colors.orangeAccent,
+                    shape: BoxShape.circle,
+                  ),
+                  selectedDecoration: BoxDecoration(
+                    color: Colors.blue,
+                    shape: BoxShape.circle,
+                  ),
+                  defaultTextStyle: TextStyle(fontSize: 18),
+                  weekendTextStyle: TextStyle(fontSize: 18),
                 ),
-                selectedDecoration: BoxDecoration(
-                  color: Colors.blue,
-                  shape: BoxShape.circle,
+                daysOfWeekStyle: const DaysOfWeekStyle(
+                  weekdayStyle: TextStyle(fontSize: 16),
+                  weekendStyle: TextStyle(fontSize: 16),
                 ),
-              ),
-              headerStyle: const HeaderStyle(
-                formatButtonVisible: false,
-                titleCentered: true,
+                headerStyle: const HeaderStyle(
+                  formatButtonVisible: false,
+                  titleCentered: true,
+                  titleTextStyle:
+                      TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
-            // ปฏิทิน
 
             const Text(
-              'ประวัติการรักษา',
+              'ข้อมูลต่างๆ',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 15),
 
             Card(
               elevation: 3,
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(15.0),
                 child: SizedBox(
-                  height: 300, // ปรับขนาดตามต้องการ
+                  // height: ,
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildMedicalRecordItem('แพทย์ผู้รักษา',
+                        _dataOther('แพทย์ผู้รักษา',
                             '10 พฤษภาคม 2568, 7:30น. โรงพยาบาลนครพิงค์'),
                         const Divider(),
-                        _buildMedicalRecordItem(
-                            'อัตราการเต้นของหัวใจล่าสุด', '75 BPM'),
+                        _dataOther('อัตราการเต้นของหัวใจล่าสุด', '75 BPM'),
                         const Divider(),
-                        _buildMedicalRecordItem(
-                            'ค่าความดันเลือดล่าสุด', 'SYS 120 / DIA 80'),
+                        _dataOther('ค่าความดันเลือดล่าสุด', 'SYS 120 / DIA 80'),
                         const Divider(),
-                        _buildMedicalRecordItem('BMI', 'ไม่มีข้อมูล'),
+                        _dataOther('BMI', 'ไม่มีข้อมูล'),
                         // เพิ่มได้เรื่อย ๆ
                       ],
                     ),
@@ -172,93 +198,14 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      const Center(child: Text('ประวัติการวิเคราะห์')),
-      const Center(child: Text('ข้อมูลส่วนตัว')),
     ];
 
-    var column = Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        BottomNavigationBar(
-          backgroundColor: const Color.fromARGB(255, 253, 253, 253),
-          selectedItemColor: Colors.red,
-          unselectedItemColor: const Color.fromARGB(255, 0, 0, 0),
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _selectedIndex,
-          onTap: (index) {
-            switch (index) {
-              case 0:
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
-                );
-                break;
-              case 1:
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HealthApp()),
-                );
-                break;
-              case 2:
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const BMICalculatorPage()),
-                );
-                break;
-              case 3:
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ArticlePage()),
-                );
-                break;
-            }
-          },
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'หน้าหลัก',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.add),
-              label: 'เพิ่มข้อมูล',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.bar_chart),
-              label: 'BMI',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.library_books),
-              label: 'บทความ',
-            ),
-          ],
-        ),
-      ],
-    );
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('ข้อมูลผู้ป่วย'),
-        backgroundColor: Colors.red[700],
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            tooltip: 'ตั้งค่า',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SettingsPage()),
-              );
-            },
-          ),
-        ],
-      ),
       body: pages[_selectedIndex],
-      bottomNavigationBar: column,
     );
   }
 
-  Widget _buildMedicalRecordItem(String title, String value) {
+  Widget _dataOther(String title, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Column(

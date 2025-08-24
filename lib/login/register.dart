@@ -46,7 +46,14 @@ class _RegisterpageState extends State<Registerpage> {
           backgroundColor: Colors.white,
           appBar: AppBar(
             title: const Text('ลงทะเบียน'),
+            centerTitle: true,
+            titleTextStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 30,
+              color: Colors.black,
+            ),
             backgroundColor: Colors.redAccent,
+            automaticallyImplyLeading: false,
           ),
           body: Padding(
             padding: const EdgeInsets.all(24.0),

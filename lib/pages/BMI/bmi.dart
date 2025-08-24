@@ -9,9 +9,7 @@ class BMICalculatorPage extends StatefulWidget {
 
 class _BMICalculatorPageState extends State<BMICalculatorPage> {
   double _height = 165;
-  double _weight = 70;
-  int _age = 50;
-  String _gender = 'male';
+  double _weight = 65;
   double? _bmiResult;
   String? _bmiCategory;
 
@@ -46,7 +44,14 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('คำนวณ BMI'),
-        backgroundColor: Colors.red[700],
+        centerTitle: true,
+        titleTextStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 30,
+          color: Colors.black,
+        ),
+        backgroundColor: Colors.redAccent,
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
@@ -62,72 +67,11 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'ค่า BMI คือค่าดัชนีที่ใช้ชี้วัดความสมบูรณ์ของน้ำหนักตัว (กิโลกรัม) และส่วนสูง (เซนติเมตร) ซึ่งสามารถระบุได้ว่ารูปร่างของคนคนนั้นอยู่ในระดับใด ตั้งแต่ผอมไปจนถึงอ้วนเกินไป',
-                      style: TextStyle(fontSize: 16),
+                      'ค่า BMI คือค่าดัชนีมวลกายที่ใช้ชี้วัดความสมบูรณ์ของน้ำหนักตัว (กิโลกรัม) และส่วนสูง (เซนติเมตร) ซึ่งสามารถระบุได้ว่ารูปร่างของคนคนนั้นอยู่ในระดับใด ตั้งแต่ผอมไปจนถึงอ้วนเกินไป',
+                      style: TextStyle(fontSize: 18),
                     ),
                   ],
                 ),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // เพศ
-            const Text(
-              'เพศ',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: ChoiceChip(
-                    label: const Text('ชาย'),
-                    selected: _gender == 'male',
-                    onSelected: (selected) {
-                      setState(() {
-                        _gender = 'male';
-                      });
-                    },
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: ChoiceChip(
-                    label: const Text('หญิง'),
-                    selected: _gender == 'female',
-                    onSelected: (selected) {
-                      setState(() {
-                        _gender = 'female';
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-
-            // อายุ
-            const Text(
-              'อายุ',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Slider(
-              value: _age.toDouble(),
-              min: 1,
-              max: 100,
-              divisions: 99,
-              label: _age.toString(),
-              onChanged: (value) {
-                setState(() {
-                  _age = value.toInt();
-                });
-              },
-            ),
-            Center(
-              child: Text(
-                '$_age ปี',
-                style: const TextStyle(fontSize: 24),
               ),
             ),
             const SizedBox(height: 20),
@@ -140,8 +84,8 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
             const SizedBox(height: 8),
             Slider(
               value: _height,
-              min: 100,
-              max: 250,
+              min: 80,
+              max: 200,
               divisions: 150,
               label: _height.toStringAsFixed(0),
               onChanged: (value) {

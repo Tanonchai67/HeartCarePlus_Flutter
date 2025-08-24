@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:heartcare_plus/home.dart';
 import 'package:heartcare_plus/pages/insertpage/date/date_his.dart';
 import 'package:heartcare_plus/pages/insertpage/history/treatment_history_page.dart';
 import 'package:heartcare_plus/pages/insertpage/medicine/medicine.dart';
 import 'package:heartcare_plus/pages/insertpage/persure/persure.dart';
-
-void main() {
-  runApp(const HealthApp());
-}
 
 class HealthApp extends StatelessWidget {
   const HealthApp({super.key});
@@ -15,10 +10,7 @@ class HealthApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'HeartCare Plus',
-      theme: ThemeData(
-        primarySwatch: Colors.red,
-      ),
+      debugShowCheckedModeBanner: false,
       home: const HealthRecordPage(),
       routes: {
         '/date': (context) => const DateHistory(),
@@ -37,17 +29,15 @@ class HealthRecordPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const HomePage()),
-            );
-          },
+        title: const Text('บันทึกข้อมูลสุขภาพ '),
+        centerTitle: true,
+        titleTextStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 30,
+          color: Colors.black,
         ),
-        title: const Text('บันทึกข้อมูลสุขภาพ'),
-        backgroundColor: Colors.red[700],
+        backgroundColor: Colors.redAccent,
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

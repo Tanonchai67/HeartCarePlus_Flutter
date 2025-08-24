@@ -36,7 +36,7 @@ class _LoginpageState extends State<Loginpage> {
 
         if (snapshot.connectionState == ConnectionState.waiting) {
           // กำลังโหลด
-          return Scaffold(
+          return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
             ),
@@ -48,7 +48,14 @@ class _LoginpageState extends State<Loginpage> {
           backgroundColor: Colors.white,
           appBar: AppBar(
             title: const Text('เข้าสู่ระบบ'),
+            centerTitle: true,
+            titleTextStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 30,
+              color: Colors.black,
+            ),
             backgroundColor: Colors.redAccent,
+            automaticallyImplyLeading: false,
           ),
           body: Padding(
             padding: const EdgeInsets.all(24.0),
@@ -175,7 +182,7 @@ class _LoginpageState extends State<Loginpage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ForgetpassPage()),
+                            builder: (context) => ForgetPassPage()),
                       );
                     },
                     child: const Text('ลืมรหัสผ่าน?'),

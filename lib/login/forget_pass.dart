@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:heartcare_plus/model/users.dart';
 
-class ForgetpassPage extends StatelessWidget {
-  ForgetpassPage({super.key});
+class ForgetPassPage extends StatelessWidget {
+  ForgetPassPage({super.key});
 
   final formkey = GlobalKey<FormState>();
   Users users = Users(email: '', pass: '');
@@ -41,7 +41,14 @@ class ForgetpassPage extends StatelessWidget {
           backgroundColor: Colors.white,
           appBar: AppBar(
             title: const Text('ลืมรหัสผ่าน'),
+            centerTitle: true,
+            titleTextStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 30,
+              color: Colors.black,
+            ),
             backgroundColor: Colors.redAccent,
+            automaticallyImplyLeading: false,
           ),
           body: Padding(
             padding: const EdgeInsets.all(24.0),
@@ -60,7 +67,7 @@ class ForgetpassPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   const Text(
-                    'กรุณากรอกอีเมลที่ใช้ลงทะเบียน\nระบบจะส่งลิงก์รีเซ็ตรหัสผ่านไปให้คุณ',
+                    'กรุณากรอกอีเมลที่ใช้ลงทะเบียน\nระบบจะส่งอีเมลรีเซ็ตรหัสผ่านไปให้คุณ',
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.grey,
@@ -198,7 +205,7 @@ class ForgetpassPage extends StatelessWidget {
                         height: 10,
                       ),
                       Text(
-                        "* ถ้าไม่เห็นอีเมลกรุณาดูที่จดหมายขยะ ",
+                        "* ถ้าไม่เห็นอีเมลกรุณาดูที่ช่อง ' จดหมายขยะ ' ",
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,

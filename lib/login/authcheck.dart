@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:heartcare_plus/home.dart';
 import 'package:heartcare_plus/login/home_login.dart';
+import 'package:heartcare_plus/main_page.dart';
 
 class AuthCheck extends StatelessWidget {
   const AuthCheck({super.key});
@@ -14,7 +14,7 @@ class AuthCheck extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator()); // โหลดอยู่
         } else if (snapshot.hasData) {
-          return const HomePage(); // ถ้ามี user → ไปหน้า Home
+          return const MainPage(); // ถ้ามี user → ไปหน้า mainpage (หน้าปุ่มแถบล่าง)
         } else {
           return const HomeLogin(); // ถ้าไม่มี user → ไปหน้า Login
         }
