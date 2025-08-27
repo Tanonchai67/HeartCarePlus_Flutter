@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:heartcare_plus/login/contact_us.dart';
 import 'package:heartcare_plus/login/home_login.dart';
 import 'package:heartcare_plus/pages/setting/profile.dart';
 
@@ -9,7 +10,19 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("การตั้งค่าต่างๆ")),
+      appBar: AppBar(
+        title: const Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: Text("การตั้งค่าต่างๆ"),
+        ),
+        titleTextStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 25,
+          color: Colors.black,
+        ),
+        // backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -42,7 +55,7 @@ class SettingsPage extends StatelessWidget {
                       Icon(Icons.person),
                       SizedBox(width: 12),
                       Text(
-                        'แก้ไขโปรไฟล์',
+                        'ข้อมูลส่วนตัว',
                         style: TextStyle(fontSize: 16),
                       ),
                     ],
@@ -68,47 +81,63 @@ class SettingsPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: SizedBox(
-              height: 50,
-              child: ElevatedButton.icon(
-                icon: const Icon(Icons.logout, color: Colors.red),
-                label: const Text("ออกจากระบบ",
-                    style: TextStyle(color: Colors.red)),
-                onPressed: () async {
-                  await FirebaseAuth.instance.signOut().then((value) async {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) {
-                        return const Center(child: CircularProgressIndicator());
-                      },
-                    );
-                    await Future.delayed(const Duration(seconds: 2));
-                    Navigator.pop(context);
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const HomeLogin()),
-                      (route) => false,
-                    );
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  side: const BorderSide(color: Colors.red),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+              height: 90,
+              child: Column(
+                children: [
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.logout, color: Colors.red),
+                    label: const Text("ออกจากระบบ",
+                        style: TextStyle(color: Colors.red)),
+                    onPressed: () async {
+                      await FirebaseAuth.instance.signOut().then((value) async {
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          },
+                        );
+                        await Future.delayed(const Duration(seconds: 2));
+                        Navigator.pop(context);
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomeLogin()),
+                          (route) => false,
+                        );
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.red),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
                   ),
-                ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ContactUs()),
+                      );
+                    },
+                    child: const Text(
+                      'หากพบปัญหาในการเข้าสู่ระบบโปรด ติดต่อเรา',
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Colors.blueAccent,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ),
-
-          const Spacer(),
-
-          const Center(
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text("หากพบปัญหาโปรดติดต่อเรา"),
             ),
           ),
         ],

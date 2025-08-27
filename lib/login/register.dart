@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:heartcare_plus/model/users.dart';
+import 'package:heartcare_plus/models/users_model.dart';
 
 class Registerpage extends StatefulWidget {
   Registerpage({super.key});
@@ -77,7 +77,7 @@ class _RegisterpageState extends State<Registerpage> {
                             RequiredValidator(errorText: "กรุณาป้อนอีเมล"),
                             EmailValidator(
                                 errorText: "รูปแบบอีเมลไม่ถูกต้อง *@gmail.com")
-                          ]),
+                          ]).call,
                           onSaved: (String? email) {
                             users.email = email ?? '';
                           },
@@ -92,7 +92,8 @@ class _RegisterpageState extends State<Registerpage> {
                         const SizedBox(height: 16),
                         TextFormField(
                           validator:
-                              RequiredValidator(errorText: "กรุณาป้อนรหัสผ่าน"),
+                              RequiredValidator(errorText: "กรุณาป้อนรหัสผ่าน")
+                                  .call,
                           onSaved: (String? pass) {
                             users.pass = pass ?? '';
                           },
@@ -122,14 +123,15 @@ class _RegisterpageState extends State<Registerpage> {
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
-                                        title: Text("สำเร็จ"),
-                                        content: Text("ลงทะเบียนเรียบร้อย!"),
+                                        title: const Text("สำเร็จ"),
+                                        content:
+                                            const Text("ลงทะเบียนเรียบร้อย!"),
                                         actions: [
                                           TextButton(
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             },
-                                            child: Text("ตกลง"),
+                                            child: const Text("ตกลง"),
                                           ),
                                         ],
                                       );
@@ -155,14 +157,14 @@ class _RegisterpageState extends State<Registerpage> {
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
-                                      title: Text("ผิดพลาด"),
+                                      title: const Text("ผิดพลาด"),
                                       content: Text(message),
                                       actions: [
                                         TextButton(
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
-                                          child: Text("ตกลง"),
+                                          child: const Text("ตกลง"),
                                         ),
                                       ],
                                     );

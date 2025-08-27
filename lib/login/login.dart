@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:heartcare_plus/login/forget_pass.dart';
 import 'package:heartcare_plus/main_page.dart';
-import 'package:heartcare_plus/model/users.dart';
+import 'package:heartcare_plus/models/users_model.dart';
 
 class Loginpage extends StatefulWidget {
   Loginpage({super.key});
@@ -26,7 +26,7 @@ class _LoginpageState extends State<Loginpage> {
         if (snapshot.hasError) {
           return Scaffold(
             appBar: AppBar(
-              title: Text("Error"),
+              title: const Text("Error"),
             ),
             body: Center(
               child: Text("${snapshot.error}"),
@@ -79,7 +79,7 @@ class _LoginpageState extends State<Loginpage> {
                             RequiredValidator(errorText: "กรุณาป้อนอีเมล"),
                             EmailValidator(
                                 errorText: "รูปแบบอีเมลไม่ถูกต้อง *@gmail.com")
-                          ]),
+                          ]).call,
                           onSaved: (String? email) {
                             users.email = email ?? '';
                           },
@@ -94,7 +94,8 @@ class _LoginpageState extends State<Loginpage> {
                         const SizedBox(height: 16),
                         TextFormField(
                           validator:
-                              RequiredValidator(errorText: "กรุณาป้อนรหัสผ่าน"),
+                              RequiredValidator(errorText: "กรุณาป้อนรหัสผ่าน")
+                                  .call,
                           onSaved: (String? pass) {
                             users.pass = pass ?? '';
                           },
@@ -151,14 +152,14 @@ class _LoginpageState extends State<Loginpage> {
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
-                                      title: Text("ผิดพลาด"),
+                                      title: const Text("ผิดพลาด"),
                                       content: Text(message),
                                       actions: [
                                         TextButton(
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
-                                          child: Text("ตกลง"),
+                                          child: const Text("ตกลง"),
                                         ),
                                       ],
                                     );

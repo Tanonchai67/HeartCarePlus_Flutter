@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:heartcare_plus/model/users.dart';
+import 'package:heartcare_plus/models/users_model.dart';
 
 class ForgetPassPage extends StatelessWidget {
   ForgetPassPage({super.key});

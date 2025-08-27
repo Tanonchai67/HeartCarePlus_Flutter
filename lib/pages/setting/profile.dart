@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heartcare_plus/pages/setting/add_profile.dart';
 
 class PatientProfilePage extends StatelessWidget {
   const PatientProfilePage({super.key});
@@ -7,13 +8,27 @@ class PatientProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('โปรไฟล์ผู้ป่วย'),
-        backgroundColor: Colors.red[700],
+        title: const Text('ข้อมูลส่วนตัว'),
+        centerTitle: true,
+        titleTextStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 25,
+          color: Colors.black,
+        ),
+        backgroundColor: Colors.redAccent,
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit),
+            icon: const Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(Icons.edit),
+            ),
+            iconSize: 35,
             onPressed: () {
-              // Navigate to edit profile page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AddProfile()),
+              );
             },
           ),
         ],
@@ -29,7 +44,8 @@ class PatientProfilePage extends StatelessWidget {
                 children: [
                   const CircleAvatar(
                     radius: 50,
-                    backgroundImage: AssetImage('assets/profile_placeholder.png'),
+                    backgroundImage:
+                        AssetImage('assets/profile_placeholder.png'),
                   ),
                   const SizedBox(height: 16),
                   const Text(
@@ -57,7 +73,8 @@ class PatientProfilePage extends StatelessWidget {
               children: [
                 _buildProfileItem('วัน/เดือน/ปีเกิด', '20 มกราคม 2518'),
                 _buildProfileItem('อีเมล', 'somchaith@gmail.com'),
-                _buildProfileItem('ที่อยู่', '247 ม.7 บ้านปากกาวสะอาด\nต.ขึ้นเล็ก อ.แปรบ จ.เชียงใหม่ 55180'),
+                _buildProfileItem('ที่อยู่',
+                    '247 ม.7 บ้านปากกาวสะอาด\nต.ขึ้นเล็ก อ.แปรบ จ.เชียงใหม่ 55180'),
                 _buildProfileItem('เบอร์โทรศัพท์', '061-234-5678'),
                 _buildProfileItem('เบอร์ติดต่อญาติ', '061-956-7820'),
               ],
@@ -97,7 +114,8 @@ class PatientProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileSection({required String title, required List<Widget> children}) {
+  Widget _buildProfileSection(
+      {required String title, required List<Widget> children}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
