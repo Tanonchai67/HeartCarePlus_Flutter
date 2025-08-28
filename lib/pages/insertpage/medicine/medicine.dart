@@ -50,7 +50,7 @@ class MedicineScreen extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.asset(
-                      'assets/medic.jpg', // แทนที่ด้วย URL หรือ Asset ของภาพยา
+                      'assets/img/medic.jpg', // แทนที่ด้วย URL หรือ Asset ของภาพยา
                       width: 60,
                       height: 60,
                       fit: BoxFit.cover,

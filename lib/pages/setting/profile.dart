@@ -44,8 +44,7 @@ class PatientProfilePage extends StatelessWidget {
                 children: [
                   const CircleAvatar(
                     radius: 50,
-                    backgroundImage:
-                        AssetImage('assets/profile_placeholder.png'),
+                    backgroundImage: AssetImage('assets/img/doctor.png'),
                   ),
                   const SizedBox(height: 16),
                   const Text(
