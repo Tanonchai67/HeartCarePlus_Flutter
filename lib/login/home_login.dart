@@ -35,9 +35,8 @@ class HomeLogin extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              // ภาพหมอ (แทนด้วย Icon หรือภาพ Asset)
               Image.asset(
-                'assets/Doctor.png', // เปลี่ยน path ตามรูปที่คุณมี
+                'assets/img/doctor.png',
                 height: 160,
               ),
 

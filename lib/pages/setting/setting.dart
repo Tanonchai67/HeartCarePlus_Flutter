@@ -89,17 +89,17 @@ class SettingsPage extends StatelessWidget {
                     label: const Text("ออกจากระบบ",
                         style: TextStyle(color: Colors.red)),
                     onPressed: () async {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        },
+                      );
+                      await Future.delayed(const Duration(seconds: 2));
+                      Navigator.pop(context);
                       await FirebaseAuth.instance.signOut().then((value) async {
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          },
-                        );
-                        await Future.delayed(const Duration(seconds: 2));
-                        Navigator.pop(context);
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(

@@ -18,6 +18,22 @@ class _LoginpageState extends State<Loginpage> {
   Users users = Users(email: '', pass: '');
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
 
+  void showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+
+  void hideLoadingDialog(BuildContext context) {
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -113,23 +129,14 @@ class _LoginpageState extends State<Loginpage> {
                             if (formkey.currentState?.validate() ?? false) {
                               formkey.currentState?.save();
                               try {
+                                showLoadingDialog(context);
                                 await FirebaseAuth.instance
                                     .signInWithEmailAndPassword(
                                         email: users.email,
                                         password: users.pass)
                                     .then((value) async {
                                   formkey.currentState?.reset();
-                                  showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (context) {
-                                      return const Center(
-                                          child: CircularProgressIndicator());
-                                    },
-                                  );
-                                  await Future.delayed(
-                                      const Duration(seconds: 2));
-                                  Navigator.pop(context);
+                                  hideLoadingDialog(context);
                                   Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(

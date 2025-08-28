@@ -1,5 +1,3 @@
-import 'dart:io';
-
 class Profiles {
   String name;
   String lastname;
@@ -10,7 +8,7 @@ class Profiles {
   String phone;
   DateTime birthday;
   String gender;
-  File? imageFile;
+  String? imageUrl;
 
   Profiles({
     required this.name,
@@ -22,6 +20,21 @@ class Profiles {
     required this.phone,
     required this.birthday,
     required this.gender,
-    this.imageFile,
+    this.imageUrl,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'lastname': lastname,
+      'nickname': nickname,
+      'condisease': condisease,
+      'allergic': allergic,
+      'email': email,
+      'phone': phone,
+      'birthday': birthday.toIso8601String(),
+      'gender': gender,
+      'imageUrl': imageUrl,
+    };
+  }
 }
