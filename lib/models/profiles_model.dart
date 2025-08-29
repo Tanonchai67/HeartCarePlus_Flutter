@@ -37,4 +37,19 @@ class Profiles {
       'imageUrl': imageUrl,
     };
   }
+
+  factory Profiles.fromMap(Map<String, dynamic> map) {
+    return Profiles(
+      name: map['name'] ?? '',
+      lastname: map['lastname'] ?? '',
+      nickname: map['nickname'] ?? '',
+      condisease: map['condisease'] ?? '',
+      allergic: map['allergic'] ?? '',
+      email: map['email'] ?? '',
+      phone: map['phone'] ?? '',
+      birthday: DateTime.tryParse(map['birthday'] ?? '') ?? DateTime.now(),
+      gender: map['gender'] ?? '',
+      imageUrl: map['imageUrl'],
+    );
+  }
 }

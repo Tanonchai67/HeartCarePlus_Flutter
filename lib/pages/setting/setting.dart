@@ -44,7 +44,7 @@ class SettingsPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const PatientProfilePage()),
+                        builder: (context) => const ProfilePage()),
                   );
                 },
                 child: const Padding(

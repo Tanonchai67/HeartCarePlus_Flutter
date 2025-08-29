@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:heartcare_plus/login/add_profiles.dart';
 import 'package:heartcare_plus/login/forget_pass.dart';
-import 'package:heartcare_plus/main_page.dart';
 import 'package:heartcare_plus/models/users_model.dart';
 
 class Loginpage extends StatefulWidget {
@@ -140,7 +140,8 @@ class _LoginpageState extends State<Loginpage> {
                                   Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const MainPage()),
+                                        builder: (context) =>
+                                            const AddProfiles()),
                                     (route) => false,
                                   );
                                 });
@@ -148,10 +149,13 @@ class _LoginpageState extends State<Loginpage> {
                                 String message = '';
                                 if (e.code == 'invalid-credential') {
                                   message = 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
+                                  hideLoadingDialog(context);
                                 } else if (e.code == 'network-request-failed') {
                                   message = 'ไม่มีการเชื่อมต่ออินเทอร์เน็ต';
+                                  hideLoadingDialog(context);
                                 } else {
                                   message = e.message ?? 'เกิดข้อผิดพลาด';
+                                  hideLoadingDialog(context);
                                 }
 
                                 // แจ้งเตือน error
