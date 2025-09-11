@@ -6,20 +6,20 @@ import 'package:heartcare_plus/models/treatment_model.dart';
 import 'package:heartcare_plus/pages/insertpage/history/animat_toast.dart';
 import 'package:intl/intl.dart';
 
-class AddTreatmentPage extends StatefulWidget {
-  const AddTreatmentPage({super.key});
+class TreatmentAddPage extends StatefulWidget {
+  const TreatmentAddPage({super.key});
 
   @override
-  State<AddTreatmentPage> createState() => _AddTreatmentPageState();
+  State<TreatmentAddPage> createState() => _TreatmentAddPageState();
 }
 
-class _AddTreatmentPageState extends State<AddTreatmentPage> {
+class _TreatmentAddPageState extends State<TreatmentAddPage> {
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _detailController = TextEditingController();
 
-  Treatments treatments = Treatments(timeaddTM: DateTime.now(), detailTM: '');
+  Treatments treatments = Treatments(dateaddTM: DateTime.now(), detailTM: '');
 
 //ใช้ตอนโชว์เฉยๆ
   String formatDateBuddhist(DateTime date) {
@@ -41,7 +41,7 @@ class _AddTreatmentPageState extends State<AddTreatmentPage> {
         _dateController.text =
             '${DateFormat('dd/MM').format(picked)}/$buddhistYear';
 
-        treatments.timeaddTM = picked;
+        treatments.dateaddTM = picked;
       });
     }
   }
@@ -66,7 +66,7 @@ class _AddTreatmentPageState extends State<AddTreatmentPage> {
             .collection('my_treatments') // subcollection ของ user
             .add({
           'detail': treatments.detailTM,
-          'date': treatments.timeaddTM,
+          'date': treatments.dateaddTM,
           'timestamp': FieldValue.serverTimestamp(),
         });
 
@@ -74,7 +74,8 @@ class _AddTreatmentPageState extends State<AddTreatmentPage> {
         showCustomToast(context, "บันทึกข้อมูลเรียบร้อย");
 
         // ล้างฟอร์ม
-        // _clearForm();
+        _clearForm();
+        Navigator.pop(context);
       } catch (e) {
         debugPrint("Error saving treatment: $e");
         showCustomToastError(context, "บันทึกข้อมูลไม่สำเร็จ");
@@ -86,7 +87,7 @@ class _AddTreatmentPageState extends State<AddTreatmentPage> {
     setState(() {
       _dateController.clear();
       _detailController.clear();
-      treatments = Treatments(timeaddTM: DateTime.now(), detailTM: '');
+      treatments = Treatments(dateaddTM: DateTime.now(), detailTM: '');
     });
   }
 

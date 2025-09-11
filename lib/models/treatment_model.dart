@@ -1,6 +1,6 @@
 class Treatments {
-  DateTime timeaddTM;
+  DateTime dateaddTM;
   String detailTM;
 
-  Treatments({required this.timeaddTM, required this.detailTM});
+  Treatments({required this.dateaddTM, required this.detailTM});
 }

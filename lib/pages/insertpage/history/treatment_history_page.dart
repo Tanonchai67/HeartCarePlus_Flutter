@@ -2,9 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart'; // สำหรับ Text-to-Speech
+import 'package:heartcare_plus/pages/insertpage/history/animat_toast.dart';
 import 'package:intl/intl.dart';
 
-import 'add_treatment_page.dart';
+import 'treatment_add_page.dart';
 
 class TreatmentHistoryPage extends StatefulWidget {
   const TreatmentHistoryPage({super.key});
@@ -168,6 +169,8 @@ class _TreatmentHistoryPageState extends State<TreatmentHistoryPage> {
                               ],
                             ),
                           ),
+
+                          // ปุ่ม TTS
                           IconButton(
                             icon: const Icon(
                               Icons.volume_up,
@@ -182,6 +185,101 @@ class _TreatmentHistoryPageState extends State<TreatmentHistoryPage> {
                               }
                               textToSpeak += "รายละเอียดการรักษา: $detail";
                               speak(textToSpeak);
+                            },
+                          ),
+
+                          // ปุ่มลบ
+                          IconButton(
+                            icon: const Icon(
+                              Icons.delete,
+                              size: 30,
+                              color: Colors.redAccent,
+                            ),
+                            onPressed: () async {
+                              // แสดง dialog ยืนยันก่อนลบ
+                              bool? confirm = await showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  backgroundColor: Colors.white,
+                                  elevation: 8,
+                                  title: const Text(
+                                    "ยืนยันการลบ",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                      color: Colors.redAccent,
+                                    ),
+                                  ),
+                                  content: const Text(
+                                    "คุณต้องการลบประวัตินี้หรือไม่?",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.black87),
+                                  ),
+                                  actionsAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  actions: [
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.grey.shade300,
+                                        foregroundColor: Colors.black87,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 12),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        elevation: 4,
+                                      ),
+                                      onPressed: () =>
+                                          Navigator.pop(context, false),
+                                      child: const Text(
+                                        "ยกเลิก",
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.redAccent,
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 12),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        elevation: 4,
+                                      ),
+                                      onPressed: () =>
+                                          Navigator.pop(context, true),
+                                      child: const Text(
+                                        "ลบ",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+
+                              if (confirm == true) {
+                                try {
+                                  await FirebaseFirestore.instance
+                                      .collection("treatments")
+                                      .doc(user!.uid)
+                                      .collection("my_treatments")
+                                      .doc(docs[index].id)
+                                      .delete();
+
+                                  showCustomToast(context, "ลบข้อมูลเรียบร้อย");
+                                } catch (e) {
+                                  showCustomToastError(
+                                      context, "ลบข้อมูลไม่สำเร็จ");
+                                }
+                              }
                             },
                           ),
                         ],
@@ -216,7 +314,7 @@ class _TreatmentHistoryPageState extends State<TreatmentHistoryPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const AddTreatmentPage(),
+                  builder: (context) => const TreatmentAddPage(),
                 ),
               );
             },

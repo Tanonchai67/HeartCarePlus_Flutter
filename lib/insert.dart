@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:heartcare_plus/pages/insertpage/date/date_his.dart';
+import 'package:heartcare_plus/pages/insertpage/appointment/appoint_his.dart';
 import 'package:heartcare_plus/pages/insertpage/history/treatment_history_page.dart';
 import 'package:heartcare_plus/pages/insertpage/medicine/medicine.dart';
 import 'package:heartcare_plus/pages/insertpage/persure/persure.dart';
@@ -13,7 +13,7 @@ class HealthApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: const HealthRecordPage(),
       routes: {
-        '/date': (context) => const DateHistory(),
+        '/appointhiss': (context) => const AppointHis(),
         '/history': (context) => const TreatmentHistoryPage(),
         '/medicine': (context) => const MedicineScreen(),
         '/pressure': (context) => const Persure(),
@@ -59,7 +59,7 @@ class HealthRecordPage extends StatelessWidget {
               icon: Icons.calendar_today,
               title: 'การนัดหมาย',
               subtitle: 'ดูและบันทึกการนัดหมายกับแพทย์',
-              routeName: '/date',
+              routeName: '/appointhiss',
             ),
             const SizedBox(height: 16),
 
