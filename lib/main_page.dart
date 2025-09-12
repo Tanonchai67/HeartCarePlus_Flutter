@@ -2,8 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:heartcare_plus/home.dart';
 import 'package:heartcare_plus/insert.dart';
-import 'package:heartcare_plus/pages/ArticlePage/ArticlePage.dart';
 import 'package:heartcare_plus/pages/BMI/bmi.dart';
+import 'package:heartcare_plus/pages/gemini_ai/gemini_chat.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -20,7 +20,7 @@ class _MainPageState extends State<MainPage> {
     HomePage(),
     HealthApp(),
     BMICalculatorPage(),
-    ArticlePage(),
+    GeminiChat(),
   ];
 
   void _onItemTapped(int index) {
@@ -79,8 +79,8 @@ class _MainPageState extends State<MainPage> {
                       label: 'BMI',
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.library_books),
-                      label: 'บทความ',
+                      icon: Icon(Icons.chat),
+                      label: 'Gemini',
                     ),
                   ],
                 ),

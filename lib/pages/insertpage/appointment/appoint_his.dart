@@ -302,9 +302,9 @@ class _AppointHisState extends State<AppointHis> {
                                   if (confirm == true) {
                                     try {
                                       await FirebaseFirestore.instance
-                                          .collection("treatments")
+                                          .collection("appointments")
                                           .doc(user!.uid)
-                                          .collection("my_treatments")
+                                          .collection("my_appointments")
                                           .doc(docs[index].id)
                                           .delete();
 
