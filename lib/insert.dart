@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heartcare_plus/pages/insertpage/appointment/appoint_his.dart';
 import 'package:heartcare_plus/pages/insertpage/history/treatment_history_page.dart';
-import 'package:heartcare_plus/pages/insertpage/medicine/medicine.dart';
+import 'package:heartcare_plus/pages/insertpage/medicine/medicine_list.dart';
 import 'package:heartcare_plus/pages/insertpage/persure/persure.dart';
 
 class HealthApp extends StatelessWidget {
@@ -15,7 +15,7 @@ class HealthApp extends StatelessWidget {
       routes: {
         '/appointhiss': (context) => const AppointHis(),
         '/history': (context) => const TreatmentHistoryPage(),
-        '/medicine': (context) => const MedicineScreen(),
+        '/medicine': (context) => const MedicineList(),
         '/pressure': (context) => const Persure(),
       },
     );

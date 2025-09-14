@@ -214,8 +214,7 @@ class _AppointHisState extends State<AppointHis> {
                                   }
                                   textToSpeak += "เวลา: $time, ";
                                   textToSpeak += "สถานที่: $location, ";
-                                  textToSpeak +=
-                                      "รายละเอียดการนัดหมาย: $detail";
+                                  textToSpeak += "รายละเอียด: $detail";
                                   speak(textToSpeak);
                                 },
                               ),

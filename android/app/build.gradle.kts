@@ -14,6 +14,16 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        isCoreLibraryDesugaringEnabled = true
+    }
+
+    dependencies {
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
+
+    // สำหรับ core library desugaring
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+
+    // dependency ตัวอื่น ๆ ของคุณ
     }
 
     kotlinOptions {
