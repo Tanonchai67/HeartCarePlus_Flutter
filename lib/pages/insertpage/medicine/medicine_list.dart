@@ -30,12 +30,6 @@ class _MedicineListState extends State<MedicineList> {
     super.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    NotificationService.init();
-  }
-
   Future<void> scheduleAllMedicineNotifications() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
@@ -215,7 +209,7 @@ class _MedicineListState extends State<MedicineList> {
                                     onPressed: () {
                                       String textToSpeak = "";
                                       if (nameMDC != null) {
-                                        textToSpeak += "ชื่อยา: $nameMDC";
+                                        textToSpeak += "ชื่อยา: $nameMDC,";
                                       }
                                       textToSpeak += "เวลากินยา: $timeMDC";
                                       speak(textToSpeak);
@@ -317,9 +311,11 @@ class _MedicineListState extends State<MedicineList> {
                                               .delete();
 
                                           showCustomToast(
+                                              // ignore: use_build_context_synchronously
                                               context, "ลบข้อมูลเรียบร้อย");
                                         } catch (e) {
                                           showCustomToastError(
+                                              // ignore: use_build_context_synchronously
                                               context, "ลบข้อมูลไม่สำเร็จ");
                                         }
                                       }
@@ -342,6 +338,7 @@ class _MedicineListState extends State<MedicineList> {
                                           : Colors.grey,
                                     ),
                                     onPressed: () async {
+                                      await NotificationService.init();
                                       final newStatus =
                                           !isNotificationOn; // สลับสถานะ
 

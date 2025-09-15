@@ -60,6 +60,7 @@ class _MedicineAddState extends State<MedicineAdd> {
   }
 
   void _saveMedicine() async {
+    await NotificationService.init();
     if (_formKey.currentState!.validate()) {
       setState(() {
         medicines.nameMDC = _nameController.text.trim();
@@ -223,6 +224,8 @@ class _MedicineAddState extends State<MedicineAdd> {
                               fontWeight: FontWeight.bold,
                               color: Color.fromARGB(255, 16, 145, 134))),
                       const SizedBox(height: 10),
+
+                      //
                       TextFormField(
                         controller: _timeController,
                         readOnly: true,
@@ -276,7 +279,7 @@ class _MedicineAddState extends State<MedicineAdd> {
                         isNotificationOn = value;
                       });
                     },
-                    activeColor: Color(0xFF4DB6AC),
+                    activeThumbColor: Color(0xFF4DB6AC),
                   )
                 ],
               ),

@@ -3,12 +3,20 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:heartcare_plus/models/users_model.dart';
+import 'package:heartcare_plus/pages/insertpage/history/animat_toast.dart';
 
-class ForgetPassPage extends StatelessWidget {
-  ForgetPassPage({super.key});
+class ForgetPassPage extends StatefulWidget {
+  const ForgetPassPage({super.key});
 
+  @override
+  State<ForgetPassPage> createState() => _ForgetPassPageState();
+}
+
+class _ForgetPassPageState extends State<ForgetPassPage> {
   final formkey = GlobalKey<FormState>();
+
   Users users = Users(email: '', pass: '');
+
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
 
   @override
@@ -38,53 +46,62 @@ class ForgetPassPage extends StatelessWidget {
 
         // snapshot สำเร็จ
         return Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            title: const Text('ลืมรหัสผ่าน'),
-            centerTitle: true,
-            titleTextStyle: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 30,
-              color: Colors.black,
-            ),
-            backgroundColor: Colors.redAccent,
-            automaticallyImplyLeading: false,
-          ),
+          backgroundColor: Colors.grey[50],
           body: Padding(
             padding: const EdgeInsets.all(24.0),
             child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 30),
-                  // Header
+
+                  // Icon โมเดิร์น
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.grey[50],
+                    child: const Icon(
+                      Icons.lock_reset,
+                      size: 100,
+                      color: Colors.redAccent,
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
                   const Text(
                     'รีเซ็ตรหัสผ่าน',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 26,
                       fontWeight: FontWeight.bold,
+                      color: Colors.black87,
                     ),
+                    textAlign: TextAlign.center,
                   ),
+
                   const SizedBox(height: 10),
+
                   const Text(
                     'กรุณากรอกอีเมลที่ใช้ลงทะเบียน\nระบบจะส่งอีเมลรีเซ็ตรหัสผ่านไปให้คุณ',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                       color: Colors.grey,
                     ),
+                    textAlign: TextAlign.center,
                   ),
+
                   const SizedBox(height: 30),
 
                   Form(
                     key: formkey,
                     child: Column(
                       children: [
+                        // Input Email
                         TextFormField(
                           validator: MultiValidator([
                             RequiredValidator(errorText: "กรุณาป้อนอีเมล"),
                             EmailValidator(
                                 errorText: "รูปแบบอีเมลไม่ถูกต้อง *@gmail.com")
-                          ]),
+                          ]).call,
                           onSaved: (String? email) {
                             users.email = email ?? '';
                           },
@@ -97,6 +114,8 @@ class ForgetPassPage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 20),
+
+                        // ปุ่มส่งอีเมล
                         ElevatedButton(
                           onPressed: () async {
                             if (formkey.currentState?.validate() ?? false) {
@@ -104,39 +123,14 @@ class ForgetPassPage extends StatelessWidget {
                               try {
                                 await FirebaseAuth.instance
                                     .sendPasswordResetEmail(
-                                        email: users.email.trim())
-                                    .then((value) async {
-                                  formkey.currentState?.reset();
-                                  showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (context) {
-                                      return const Center(
-                                          child: CircularProgressIndicator());
-                                    },
-                                  );
-                                  await Future.delayed(
-                                      const Duration(seconds: 2));
-                                  Navigator.pop(context);
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: Text("สำเร็จ"),
-                                        content: Text(
-                                            "ระบบได้ทำการส่งอีเมลไปให้เรียบร้อย!"),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text("ตกลง"),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                });
+                                        email: users.email.trim());
+
+                                if (!mounted) return;
+
+                                showCustomToastUser(
+                                    // ignore: use_build_context_synchronously
+                                    context,
+                                    "ส่งอีเมลเรียบร้อย");
                               } on FirebaseAuthException catch (e) {
                                 String message = '';
                                 if (e.code == 'firebase_auth/user-not-found') {
@@ -148,24 +142,12 @@ class ForgetPassPage extends StatelessWidget {
                                   message = e.message ?? 'เกิดข้อผิดพลาด';
                                 }
 
-                                // แจ้งเตือน error
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: Text("ผิดพลาด"),
-                                      content: Text(message),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text("ตกลง"),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
+                                if (!mounted) return;
+
+                                showCustomToastUserErrors(
+                                    // ignore: use_build_context_synchronously
+                                    context,
+                                    message);
                               }
                             }
                           },
@@ -175,59 +157,55 @@ class ForgetPassPage extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            elevation: 10,
-                            shadowColor: Colors.black,
+                            elevation: 8,
+                            shadowColor: Colors.black26,
                           ),
                           child: const Text(
                             'ส่งอีเมลรีเซ็ตรหัสผ่าน',
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                              color: Colors.white,
                             ),
                           ),
                         ),
+
                         const SizedBox(height: 20),
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "หมายเหตุ:",
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "* ต้องเป็นอีเมลที่เคยลงทะเบียนแล้วเท่านั้น ",
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "* ถ้าไม่เห็นอีเมลกรุณาดูที่ช่อง ' จดหมายขยะ ' ",
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                    ],
+
+                  // หมายเหตุ
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade50,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "หมายเหตุ:",
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.redAccent),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          "* ต้องเป็นอีเมลที่เคยลงทะเบียนแล้วเท่านั้น ",
+                          style:
+                              TextStyle(fontSize: 18, color: Colors.redAccent),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          "* ถ้าไม่เห็นอีเมลดูที่ช่อง 'จดหมายขยะ'",
+                          style:
+                              TextStyle(fontSize: 18, color: Colors.redAccent),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

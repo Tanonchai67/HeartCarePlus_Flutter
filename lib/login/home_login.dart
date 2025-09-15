@@ -17,13 +17,39 @@ class HomeLogin extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // โลโก้หัวใจ
-              const Icon(Icons.favorite, color: Colors.red, size: 60),
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [Colors.red.shade400, Colors.pink.shade300],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      // ignore: deprecated_member_use
+                      color: Colors.red.shade200.withOpacity(0.4),
+                      blurRadius: 12,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.favorite,
+                    color: Colors.white,
+                    size: 55,
+                  ),
+                ),
+              ),
 
               const SizedBox(height: 16),
 
               // ชื่อแอป
               const Text(
-                'HeartCare\nPlus',
+                'HeartCarePlus',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 32,
@@ -49,7 +75,7 @@ class HomeLogin extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 'กรุณาลงทะเบียนหรือเข้าสู่ระบบก่อนใช้งาน',
-                style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                style: TextStyle(fontSize: 16, color: Colors.grey[700]),
               ),
 
               const SizedBox(height: 24),
@@ -120,14 +146,11 @@ class HomeLogin extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => const ContactUs()),
                   );
                 },
-                child: const Text(
-                  'หากพบปัญหาในการเข้าสู่ระบบโปรด ติดต่อเรา',
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    color: Colors.blueAccent,
-                    fontSize: 14,
-                  ),
-                ),
+                child: const Text('หากพบปัญหาในการเข้าสู่ระบบโปรด ติดต่อเรา',
+                    style: TextStyle(
+                        fontSize: 16,
+                        decoration: TextDecoration.underline,
+                        color: Colors.black87)),
               ),
             ],
           ),
