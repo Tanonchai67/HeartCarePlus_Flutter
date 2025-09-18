@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -23,11 +24,13 @@ class NotificationService {
 
     await _notifications.initialize(initSettings);
 
-    // ขอ permission สำหรับ Android 13+
-    if (await Permission.notification.isDenied) {
-      final result = await Permission.notification.request();
-      if (!result.isGranted) {
-        print("User denied notification permission");
+    // ขอ permission สำหรับ Android 13+ (POST_NOTIFICATIONS)
+    if (Platform.isAndroid) {
+      if (await Permission.notification.isDenied) {
+        final result = await Permission.notification.request();
+        if (!result.isGranted) {
+          print("User denied notification permission");
+        }
       }
     }
   }
@@ -93,7 +96,7 @@ class NotificationService {
           ),
         ),
 
-        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         matchDateTimeComponents:
             DateTimeComponents.time, // แจ้งเตือนทุกวันเวลาเดียวกัน
       );
@@ -108,5 +111,11 @@ class NotificationService {
   Future<void> cancelNotification(String docId) async {
     await _notifications.cancel(docId.hashCode);
     print("ปิดการแจ้งเตือนเรียบร้อย");
+  }
+
+  /// ฟังก์ชันยกเลิกการแจ้งเตือนทั้งหมด
+  Future<void> cancelAllNotifications() async {
+    await _notifications.cancelAll();
+    print("ปิดการแจ้งเตือนทั้งหมดเรียบร้อย");
   }
 }

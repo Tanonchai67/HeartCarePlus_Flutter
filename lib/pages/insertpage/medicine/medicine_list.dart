@@ -16,6 +16,7 @@ class MedicineList extends StatefulWidget {
 class _MedicineListState extends State<MedicineList> {
   final User? user = FirebaseAuth.instance.currentUser;
   final FlutterTts flutterTts = FlutterTts();
+  bool _isNotificationEnabled = true;
 
   Future<void> speak(String text) async {
     await flutterTts.setLanguage("th-TH");
@@ -28,6 +29,16 @@ class _MedicineListState extends State<MedicineList> {
   void dispose() {
     flutterTts.stop();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeNotifications();
+  }
+
+  Future<void> _initializeNotifications() async {
+    await scheduleAllMedicineNotifications();
   }
 
   Future<void> scheduleAllMedicineNotifications() async {
@@ -59,6 +70,48 @@ class _MedicineListState extends State<MedicineList> {
     }
   }
 
+  Future<void> updateAllNotificationsBatch(bool value) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final snapshot = await FirebaseFirestore.instance
+        .collection("medicines")
+        .doc(user.uid)
+        .collection("my_medicines")
+        .get();
+
+    final batch = FirebaseFirestore.instance.batch();
+
+    for (var doc in snapshot.docs) {
+      // อัปเดต Firestore
+      batch.update(doc.reference, {
+        "isNotificationOn": value,
+      });
+
+      // 🔹 ตั้งค่าการแจ้งเตือนจริง
+      final data = doc.data();
+      final name = data['name'] ?? '';
+      final time = data['time'] ?? '';
+
+      if (value) {
+        // เปิดแจ้งเตือน
+        await NotificationService().scheduleMedicineNotification(
+          doc.id,
+          name,
+          time,
+        );
+        showCustomToast(context, "เปิดการแจ้งเตือนทั้งหมด");
+      } else {
+        // ปิดแจ้งเตือน
+        await NotificationService().cancelAllNotifications();
+        showCustomToastError(context, "ปิดการแจ้งเตือนทั้งหมด");
+      }
+    }
+
+    // Commit batch update Firestore
+    await batch.commit();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,22 +137,38 @@ class _MedicineListState extends State<MedicineList> {
           Padding(
             padding: const EdgeInsets.only(right: 16, top: 8, bottom: 8),
             child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.redAccent,
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 4,
-                    offset: Offset(2, 2),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 4,
+                      offset: Offset(2, 2),
+                    ),
+                  ],
+                ),
+                child: IconButton(
+                  icon: Icon(
+                    _isNotificationEnabled
+                        ? Icons.notifications_active
+                        : Icons.notifications_off,
+                    size: 30,
+                    color:
+                        _isNotificationEnabled ? Colors.blueAccent : Colors.red,
                   ),
-                ],
-              ),
-              child: IconButton(
-                icon: const Icon(Icons.favorite, color: Colors.white, size: 28),
-                onPressed: () {},
-              ),
-            ),
+                  onPressed: () async {
+                    // สลับสถานะ
+                    final newValue = !_isNotificationEnabled;
+
+                    setState(() {
+                      _isNotificationEnabled = newValue;
+                    });
+
+                    // เรียกฟังก์ชันอัปเดต Firestore / batch update
+                    await updateAllNotificationsBatch(newValue);
+                  },
+                )),
           ),
         ],
       ),
@@ -310,13 +379,18 @@ class _MedicineListState extends State<MedicineList> {
                                               .doc(doc[index].id)
                                               .delete();
 
+                                          await NotificationService()
+                                              .cancelNotification(
+                                                  doc[index].id);
                                           showCustomToast(
                                               // ignore: use_build_context_synchronously
-                                              context, "ลบข้อมูลเรียบร้อย");
+                                              context,
+                                              "ลบข้อมูลเรียบร้อย");
                                         } catch (e) {
                                           showCustomToastError(
                                               // ignore: use_build_context_synchronously
-                                              context, "ลบข้อมูลไม่สำเร็จ");
+                                              context,
+                                              "ลบข้อมูลไม่สำเร็จ");
                                         }
                                       }
                                     },
@@ -359,12 +433,12 @@ class _MedicineListState extends State<MedicineList> {
                                           timeMDC,
                                         );
                                         showCustomToast(context,
-                                            "เปิดการแจ้งเตือน\n ชื่อยา: $nameMDC");
+                                            "เปิดการแจ้งเตือน\n$nameMDC");
                                       } else {
                                         await NotificationService()
                                             .cancelNotification(doc[index].id);
                                         showCustomToastError(context,
-                                            "ปิดการแจ้งเตือน\n ชื่อยา: $nameMDC");
+                                            "ปิดการแจ้งเตือน\n$nameMDC");
                                       }
                                     },
                                   ),

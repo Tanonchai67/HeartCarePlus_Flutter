@@ -10,6 +10,7 @@ import 'package:heartcare_plus/login/home_login.dart';
 import 'package:heartcare_plus/main_page.dart';
 import 'package:heartcare_plus/models/profiles_model.dart';
 import 'package:heartcare_plus/pages/insertpage/history/animat_toast.dart';
+import 'package:heartcare_plus/pages/insertpage/medicine/notification_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
@@ -266,6 +267,40 @@ class _AddProfilesState extends State<AddProfiles> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null && user.email != null) {
       _emailController.text = user.email!; // ใส่อีเมลลงในช่องอัตโนมัติ
+    }
+    _initializeNotifications();
+  }
+
+  Future<void> _initializeNotifications() async {
+    await scheduleAllMedicineNotifications();
+  }
+
+  Future<void> scheduleAllMedicineNotifications() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final snapshot = await FirebaseFirestore.instance
+        .collection("medicines")
+        .doc(user.uid)
+        .collection("my_medicines")
+        .get();
+
+    for (var doc in snapshot.docs) {
+      final data = doc.data();
+      final name = data["name"] ?? "ไม่มีข้อมูล";
+      final time = data["time"] ?? "ไม่มีข้อมูล";
+      final isNotificationOn = data["isNotificationOn"] ?? true;
+
+      if (isNotificationOn) {
+        await NotificationService().scheduleMedicineNotification(
+          doc.id,
+          name,
+          time,
+        );
+      } else {
+        // ปิดเฉพาะรายการที่ปิด
+        await NotificationService().cancelNotification(doc.id);
+      }
     }
   }
 

@@ -177,6 +177,7 @@ class _GeminiChatState extends State<GeminiChat> {
             fontWeight: FontWeight.bold,
             fontSize: 22,
             letterSpacing: 0.5,
+            color: Colors.white,
           ),
         ),
         centerTitle: true,

@@ -1,3 +1,6 @@
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class BMICalculatorPage extends StatefulWidget {
@@ -8,18 +11,34 @@ class BMICalculatorPage extends StatefulWidget {
 }
 
 class _BMICalculatorPageState extends State<BMICalculatorPage> {
-  double _height = 165;
-  double _weight = 65;
+  final TextEditingController _heightController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController();
+
   double? _bmiResult;
   String? _bmiCategory;
 
   void _calculateBMI() {
-    if (_height > 0) {
-      final heightInMeter = _height / 100;
-      setState(() {
-        _bmiResult = _weight / (heightInMeter * heightInMeter);
-        _updateBMICategory();
-      });
+    final heightText = _heightController.text.trim();
+    final weightText = _weightController.text.trim();
+
+    if (heightText.isEmpty || weightText.isEmpty) return;
+
+    final height = double.tryParse(heightText);
+    final weight = double.tryParse(weightText);
+
+    if (height == null || weight == null || height <= 0 || weight <= 0) return;
+
+    final heightInMeter = height / 100;
+    final bmi = weight / (heightInMeter * heightInMeter);
+
+    setState(() {
+      _bmiResult = bmi;
+      _updateBMICategory();
+    });
+
+    // บันทึกลง Firestore
+    if (_bmiResult != null && _bmiCategory != null) {
+      saveBMI(_bmiResult!, _bmiCategory!);
     }
   }
 
@@ -39,152 +58,179 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
     }
   }
 
+  Future<void> saveBMI(double bmi, String category) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('treatments')
+          .doc(user.uid)
+          .set(
+        {
+          'bmi': bmi,
+          'bmidetail': category,
+          'bmitime': FieldValue.serverTimestamp(),
+        },
+        SetOptions(merge: true), // สำคัญ! เพื่อไม่ลบ field อื่นๆ ที่มีอยู่
+      );
+
+      print('BMI saved to Firestore successfully');
+    } catch (e) {
+      print('Error saving BMI: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('คำนวณ BMI'),
-        centerTitle: true,
-        titleTextStyle: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 30,
-          color: Colors.black,
+        elevation: 8,
+        backgroundColor: Colors.blue.shade600,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(24),
+          ),
         ),
-        backgroundColor: Colors.redAccent,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.fitness_center,
+                  color: Colors.white, size: 30),
+              onPressed: () {},
+            ),
+            const Text(
+              'คำนวณ BMI',
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                letterSpacing: 1.0,
+              ),
+            ),
+          ],
+        ),
+        centerTitle: true,
         automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // คำอธิบาย BMI
-            const Card(
-              elevation: 3,
+            // คำอธิบาย
+            Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
               child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'ค่า BMI คือค่าดัชนีมวลกายที่ใช้ชี้วัดความสมบูรณ์ของน้ำหนักตัว (กิโลกรัม) และส่วนสูง (เซนติเมตร) ซึ่งสามารถระบุได้ว่ารูปร่างของคนคนนั้นอยู่ในระดับใด ตั้งแต่ผอมไปจนถึงอ้วนเกินไป',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ],
+                padding: const EdgeInsets.all(16.0),
+                child: const AutoSizeText(
+                  'ค่า BMI คือค่าดัชนีมวลกายที่ใช้ชี้วัดความสมบูรณ์ของน้ำหนักตัวและส่วนสูง ซึ่งสามารถระบุได้ว่ารูปร่างของคุณอยู่ในระดับใด ตั้งแต่ผอมไปจนถึงอ้วนเกินไป',
+                  style: TextStyle(height: 1.5),
+                  maxLines: 8,
+                  minFontSize: 18,
+                  maxFontSize: 20,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
 
-            // ส่วนสูง
-            const Text(
-              'ส่วนสูง (ซม.)',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: _buildSection(
+                    title: "ส่วนสูง (ซม.)",
+                    child: TextFormField(
+                      controller: _heightController,
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: true),
+                      decoration: _inputDecoration(hintText: "165"),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: _buildSection(
+                    title: "น้ำหนัก (กก.)",
+                    child: TextFormField(
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: true),
+                      controller: _weightController,
+                      decoration: _inputDecoration(hintText: "60"),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            Slider(
-              value: _height,
-              min: 80,
-              max: 200,
-              divisions: 150,
-              label: _height.toStringAsFixed(0),
-              onChanged: (value) {
-                setState(() {
-                  _height = value;
-                });
-              },
-            ),
-            Center(
-              child: Text(
-                '${_height.toStringAsFixed(0)} ซม.',
-                style: const TextStyle(fontSize: 24),
-              ),
-            ),
-            const SizedBox(height: 20),
 
-            // น้ำหนัก
-            const Text(
-              'น้ำหนัก (กก.)',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Slider(
-              value: _weight,
-              min: 30,
-              max: 200,
-              divisions: 170,
-              label: _weight.toStringAsFixed(0),
-              onChanged: (value) {
-                setState(() {
-                  _weight = value;
-                });
-              },
-            ),
-            Center(
-              child: Text(
-                '${_weight.toStringAsFixed(0)} กก.',
-                style: const TextStyle(fontSize: 24),
-              ),
-            ),
-            const SizedBox(height: 30),
+            SizedBox(height: 30),
 
             // ปุ่มคำนวณ
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red[700],
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
+            Center(
+              child: _buildButton(
+                text: "คำนวณ",
+                color: Colors.teal.shade400,
+                icon: Icons.calculate_outlined,
                 onPressed: _calculateBMI,
-                child: const Text(
-                  'คำนวณ',
-                  style: TextStyle(fontSize: 18, color: Colors.black),
-                ),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 30),
 
             // ผลลัพธ์
             if (_bmiResult != null)
               Center(
-                child: SizedBox(
-                  width: 300, // กำหนดความกว้าง
-                  height: 200, // กำหนดความสูง
-                  child: Card(
-                    elevation: 3,
-                    color: _getBMIColor(),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          const Text(
-                            'ผลการคำนวณ BMI',
-                            style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            _bmiResult!.toStringAsFixed(1),
-                            style: const TextStyle(
-                              fontSize: 45,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Text(
-                            _bmiCategory!,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
+                child: Container(
+                  width: 300,
+                  height: 220,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      // ignore: deprecated_member_use
+                      colors: [_getBMIColor().withOpacity(0.9), _getBMIColor()],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        // ignore: deprecated_member_use
+                        color: _getBMIColor().withOpacity(0.5),
+                        blurRadius: 12,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'ผลการคำนวณ BMI',
+                        style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        _bmiResult!.toStringAsFixed(1),
+                        style: const TextStyle(
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                      Text(
+                        _bmiCategory!,
+                        style:
+                            const TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -196,10 +242,80 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
 
   Color _getBMIColor() {
     if (_bmiResult == null) return Colors.grey;
-    if (_bmiResult! < 18.5) return Colors.blue; // ผอม
-    if (_bmiResult! < 23) return Colors.green; // ปกติ
-    if (_bmiResult! < 25) return Colors.yellow[700]!; // ท้วม
-    if (_bmiResult! < 30) return Colors.orange; // อ้วน
-    return Colors.red; // อ้วนมาก
+    if (_bmiResult! < 18.5) return Colors.blueAccent;
+    if (_bmiResult! < 23) return Colors.green;
+    if (_bmiResult! < 25) return Colors.yellow[700]!;
+    if (_bmiResult! < 30) return Colors.orangeAccent;
+    return Colors.redAccent;
   }
+}
+
+// --- Widgets Helper --- ใช้สำหรับช่วยแต่งให้สวยๆ
+Widget _buildSection({
+  required String title,
+  required Widget child,
+}) {
+  return Card(
+    elevation: 4,
+    margin: const EdgeInsets.symmetric(vertical: 10),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+    child: Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SizedBox(
+        width: 120,
+        height: 120,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(title,
+                style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black)),
+            const SizedBox(height: 10),
+            child,
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+InputDecoration _inputDecoration({String? hintText}) {
+  return InputDecoration(
+    hintText: hintText,
+    hintStyle: TextStyle(fontSize: 20, color: Colors.grey),
+    filled: true,
+    fillColor: Colors.grey[50],
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16),
+      borderSide: BorderSide.none,
+    ),
+    contentPadding: const EdgeInsets.symmetric(vertical: 25, horizontal: 16),
+  );
+}
+
+Widget _buildButton({
+  required String text,
+  required Color color,
+  required IconData icon,
+  required VoidCallback onPressed,
+}) {
+  return ElevatedButton.icon(
+    onPressed: onPressed,
+    icon: Icon(icon, color: Colors.white, size: 40),
+    label: Text(
+      text,
+      style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+    ),
+    style: ElevatedButton.styleFrom(
+      backgroundColor: color,
+      foregroundColor: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30),
+      ),
+      elevation: 6,
+    ),
+  );
 }

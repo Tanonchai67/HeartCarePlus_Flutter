@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:heartcare_plus/login/contact_us.dart';
 import 'package:heartcare_plus/login/home_login.dart';
 import 'package:heartcare_plus/pages/insertpage/history/animat_toast.dart';
+import 'package:heartcare_plus/pages/insertpage/medicine/notification_service.dart';
 import 'package:heartcare_plus/pages/setting/profile.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -140,7 +141,8 @@ class SettingsPage extends StatelessWidget {
                   await Future.delayed(const Duration(seconds: 2));
                   Navigator.pop(context);
 
-                  await FirebaseAuth.instance.signOut().then((value) {
+                  await FirebaseAuth.instance.signOut().then((value) async {
+                    await NotificationService().cancelAllNotifications();
                     showCustomToastUser(context, "ออกจากระบบเรียบร้อย");
                     Navigator.pushAndRemoveUntil(
                         context,
