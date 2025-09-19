@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:heartcare_plus/login/home_login.dart';
 import 'package:heartcare_plus/models/profiles_model.dart';
 import 'package:heartcare_plus/pages/setting/setting.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -154,6 +155,14 @@ class _HomePageState extends State<HomePage> {
           'detail': doc['detail'] ?? 'ไม่มีข้อมูล',
         };
       }).toList();
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initializeDateFormatting('th', null).then((_) {
+      setState(() {});
     });
   }
 

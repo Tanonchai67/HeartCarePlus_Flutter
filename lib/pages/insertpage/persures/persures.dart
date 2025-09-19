@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:heartcare_plus/pages/insertpage/persures/insert_persures.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 class Persures extends StatefulWidget {
@@ -57,6 +58,14 @@ class _PersuresState extends State<Persures> {
       default:
         return Colors.grey;
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initializeDateFormatting('th', null).then((_) {
+      setState(() {});
+    });
   }
 
   @override
