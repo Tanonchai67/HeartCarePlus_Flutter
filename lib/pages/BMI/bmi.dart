@@ -63,10 +63,7 @@ class _BMICalculatorPageState extends State<BMICalculatorPage> {
     if (user == null) return;
 
     try {
-      await FirebaseFirestore.instance
-          .collection('treatments')
-          .doc(user.uid)
-          .set(
+      await FirebaseFirestore.instance.collection('persures').doc(user.uid).set(
         {
           'bmi': bmi,
           'bmidetail': category,
