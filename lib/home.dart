@@ -348,7 +348,7 @@ class _HomePageState extends State<HomePage> {
                           DateTime dateBMI = timestampBMI.toDate();
                           int yearBMI = dateBMI.year + 543;
                           String persuresBmiTime =
-                              DateFormat('dd MMMM $yearBMI', 'th')
+                              DateFormat('dd MMMM $yearBMI เวลา HH:mm น.', 'th')
                                   .format(dateBMI);
 
                           return StreamBuilder(
@@ -625,7 +625,7 @@ class _HomePageState extends State<HomePage> {
                                                   const Divider(),
                                                   _dataOther(
                                                       'ค่าดัชนีมวลกาย (BMI)',
-                                                      '$persuresBmi kg/m² || $persuresBmiDetail\nข้อมูลล่าสุด $persuresBmiTime'),
+                                                      '$persuresBmi kg/m² || $persuresBmiDetail\nข้อมูลเมื่อ $persuresBmiTime'),
                                                   // เพิ่มได้เรื่อย ๆ
                                                 ],
                                               ),

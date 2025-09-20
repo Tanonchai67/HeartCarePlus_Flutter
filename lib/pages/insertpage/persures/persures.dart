@@ -17,29 +17,31 @@ class _PersuresState extends State<Persures> {
   String getStatus(String type, double value) {
     switch (type) {
       case "HR":
-        if (value < 60 || value > 100) return "เสี่ยง";
+        if (value < 60) return "เฝ้าระวัง";
+        if (value > 100) return "เสี่ยง";
         return "ปกติ";
 
       case "SYS":
         if (value < 90) return "เสี่ยง";
-        if (value <= 120) return "ปกติ";
+        if (value <= 129) return "ปกติ";
         if (value <= 139) return "เฝ้าระวัง";
         return "เสี่ยง";
 
       case "DIA":
         if (value < 60) return "เสี่ยง";
-        if (value <= 80) return "ปกติ";
+        if (value <= 84) return "ปกติ";
         if (value <= 89) return "เฝ้าระวัง";
         return "เสี่ยง";
 
       case "SpO2":
-        if (value < 94) return "เสี่ยง";
+        if (value < 90) return "เสี่ยง";
+        if (value < 95) return "เฝ้าระวัง";
         return "ปกติ";
 
       case "BMI":
         if (value < 18.5) return "เฝ้าระวัง";
-        if (value <= 22.9) return "ปกติ";
-        if (value <= 27.4) return "เฝ้าระวัง";
+        if (value < 23) return "ปกติ";
+        if (value < 25) return "เฝ้าระวัง";
         return "เสี่ยง";
 
       default:
@@ -221,9 +223,9 @@ class _PersuresState extends State<Persures> {
                       const SizedBox(height: 12),
                       const Text(
                         "• ความดันปกติ\n"
-                        "   - SYS (ตัวบน): 90 - 140 mmHg\n"
-                        "   - DIA (ตัวล่าง): 60 - 90 mmHg\n\n"
-                        "   - ถ้าสูงเกิน 140/90 เสี่ยงโรคหัวใจ\n"
+                        "   - SYS (ตัวบน): 90 - 129 mmHg\n"
+                        "   - DIA (ตัวล่าง): 60 - 84 mmHg\n\n"
+                        "   - ถ้าสูงเกิน 139/89 เสี่ยงโรคหัวใจ\n"
                         "   - ถ้าต่ำกว่า 90/60 อาจเวียนหัว หน้ามืดได้\n\n"
                         "• อัตราการเต้นของหัวใจ\n"
                         "   - ปกติ: 60-100 ครั้ง/นาที\n"

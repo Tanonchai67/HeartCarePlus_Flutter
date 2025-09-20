@@ -32,7 +32,7 @@ class NoConnectionScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 16),
                 Text(
-                  "กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของคุณแล้วลงใหม่อีกครั้ง",
+                  "กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของคุณแล้วลองใหม่อีกครั้ง",
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         color: Colors.black87,
                       ),
