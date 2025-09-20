@@ -39,6 +39,7 @@ class HealthRecordPage extends StatelessWidget {
             fontWeight: FontWeight.bold,
             fontSize: 26,
             letterSpacing: 0.5,
+            color: Colors.white,
           ),
         ),
         centerTitle: true,
@@ -122,6 +123,7 @@ class HealthRecordPage extends StatelessWidget {
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
+                    // ignore: deprecated_member_use
                     colors: [iconColor.withOpacity(0.6), iconColor],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,

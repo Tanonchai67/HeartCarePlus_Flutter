@@ -613,19 +613,18 @@ class _HomePageState extends State<HomePage> {
                                                       "วันที่ $treatmentDate\n$treatmentDetail"),
                                                   const Divider(),
                                                   _dataOther(
-                                                      'อัตราการเต้นของหัวใจล่าสุด',
+                                                      'อัตราการเต้นของหัวใจ',
                                                       '$persureHr ครั้ง/นาที'),
                                                   const Divider(),
-                                                  _dataOther(
-                                                      'ค่าความดันเลือดล่าสุด',
+                                                  _dataOther('ค่าความดันเลือด',
                                                       'SYS $persureSys mmHg || DIA $persureDia mmHg'),
                                                   const Divider(),
                                                   _dataOther(
-                                                      'SpO₂ (ความอิ่มตัวของออกซิเจนในเลือด)',
+                                                      'ค่าออกซิเจนในเลือด (SpO₂)',
                                                       '$persureSpo2 %'),
                                                   const Divider(),
                                                   _dataOther(
-                                                      'BMI (ค่าดัชนีมวลกาย)',
+                                                      'ค่าดัชนีมวลกาย (BMI)',
                                                       '$persuresBmi kg/m² || $persuresBmiDetail\nข้อมูลล่าสุด $persuresBmiTime'),
                                                   // เพิ่มได้เรื่อย ๆ
                                                 ],
@@ -674,7 +673,7 @@ class _HomePageState extends State<HomePage> {
                       fontWeight: FontWeight.bold,
                       color: Colors.teal[800],
                     ),
-                    maxLines: 1,
+                    maxLines: 2,
                     minFontSize: 16,
                     overflow: TextOverflow.ellipsis,
                   ),

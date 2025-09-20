@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:heartcare_plus/models/profiles_model.dart';
+import 'package:heartcare_plus/pages/insertpage/history/animat_toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
@@ -117,6 +118,12 @@ class _EditProfileState extends State<EditProfile> {
     });
   }
 
+  // Format วันที่ พ.ศ.
+  String formatDateBuddhist(DateTime date) {
+    final buddhistYear = date.year + 543;
+    return '${DateFormat('dd/MM').format(date)}/$buddhistYear';
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -154,354 +161,283 @@ class _EditProfileState extends State<EditProfile> {
 
             if (!_isProfileLoaded) {
               profiles = snapshot.data!;
-              _birthdayController.text =
-                  DateFormat('dd/MM/yyyy').format(profiles.birthday);
+              _birthdayController.text = formatDateBuddhist(profiles.birthday);
               _isProfileLoaded = true;
             }
 
             // // snapshot สำเร็จ
             return Scaffold(
               appBar: AppBar(
-                title: const Text('กรอกข้อมูลส่วนตัว'),
-                centerTitle: true,
-                titleTextStyle: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                  color: Colors.black,
+                elevation: 8,
+                backgroundColor: Colors.teal.shade600,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(24),
+                  ),
                 ),
-                backgroundColor: Colors.redAccent,
+                title: const Text(
+                  'แก้ไขโปรไฟล์',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    letterSpacing: 1.0,
+                  ),
+                ),
+                centerTitle: true,
                 automaticallyImplyLeading: false,
+                actions: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(right: 16, top: 8, bottom: 8),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: const LinearGradient(
+                          colors: [Colors.redAccent, Colors.red],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black38,
+                            blurRadius: 6,
+                            offset: Offset(2, 4),
+                          ),
+                        ],
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.favorite,
+                            color: Colors.white, size: 28),
+                        onPressed: () {},
+                      ),
+                    ),
+                  ),
+                ],
               ),
               body: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: Form(
                   key: formKey,
-                  child: Card(
-                    elevation: 6,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        children: [
-                          Text(
-                            "เลือกรูปโปรไฟล์",
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 10),
-                          // รูปโปรไฟล์
-                          GestureDetector(
-                            onTap: pickImage,
-                            child: CircleAvatar(
-                              radius: 50,
-                              backgroundImage: _image != null
-                                  ? FileImage(_image!) // ถ้าเลือกภาพใหม่
-                                  : (profiles.imageUrl != null &&
-                                          profiles.imageUrl!.isNotEmpty
-                                      ? NetworkImage(profiles.imageUrl!)
-                                          as ImageProvider
-                                      : null), // ถ้ามีใน Firestore ใช้อันนี้
-                              child: (_image == null &&
-                                      (profiles.imageUrl == null ||
-                                          profiles.imageUrl!.isEmpty))
-                                  ? const Icon(Icons.add_a_photo, size: 50)
-                                  : null,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
+                  child: Column(
+                    children: [
+                      // หัวข้อ
+                      Text(
+                        "เลือกรูป",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.teal.shade700,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
 
-                          // เพศ
-                          const Text("เพศ",
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      // เลือกรูปโปรไฟล์
+                      GestureDetector(
+                        onTap: pickImage,
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundImage: _image != null
+                              ? FileImage(_image!) // ถ้าเลือกภาพใหม่
+                              : (profiles.imageUrl != null &&
+                                      profiles.imageUrl!.isNotEmpty
+                                  ? NetworkImage(profiles.imageUrl!)
+                                      as ImageProvider
+                                  : null), // ถ้ามีใน Firestore ใช้อันนี้
+                          child: (_image == null &&
+                                  (profiles.imageUrl == null ||
+                                      profiles.imageUrl!.isEmpty))
+                              ? const Icon(Icons.add_a_photo, size: 50)
+                              : null,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Card กล่องข้อมูล
+                      Card(
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
                             children: [
+                              // เพศ
+                              const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "เพศ",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
                               Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
-                                  Radio<String>(
-                                    value: "ชาย",
-                                    groupValue: profiles.gender,
-                                    onChanged: (String? gender) {
-                                      setState(() {
-                                        profiles.gender = gender ?? '';
-                                      });
-                                    },
-                                  ),
-                                  const Text("ชาย"),
+                                  _genderOption("ชาย"),
+                                  _genderOption("หญิง"),
+                                  _genderOption("อื่น ๆ"),
                                 ],
                               ),
-                              Row(
-                                children: [
-                                  Radio<String>(
-                                    value: "หญิง",
-                                    groupValue: profiles.gender,
-                                    onChanged: (String? gender) {
-                                      setState(() {
-                                        profiles.gender = gender ?? '';
-                                      });
-                                    },
+                              const SizedBox(height: 20),
+
+                              // ฟิลด์ต่างๆ
+                              _buildTextField(
+                                  label: "ชื่อ",
+                                  icon: Icons.person,
+                                  readOnly: false,
+                                  initialValue: profiles.name,
+                                  onSaved: (val) => profiles.name = val ?? ""),
+                              const SizedBox(height: 16),
+                              _buildTextField(
+                                  label: "นามสกุล",
+                                  icon: Icons.person_outline,
+                                  readOnly: false,
+                                  initialValue: profiles.lastname,
+                                  onSaved: (val) =>
+                                      profiles.lastname = val ?? ""),
+                              const SizedBox(height: 16),
+                              _buildTextField(
+                                  label: "ชื่อเล่น",
+                                  icon: Icons.tag_faces,
+                                  readOnly: false,
+                                  initialValue: profiles.nickname,
+                                  onSaved: (val) =>
+                                      profiles.nickname = val ?? ""),
+                              const SizedBox(height: 16),
+                              _buildTextField(
+                                  label: "โรคประจำตัว",
+                                  icon: Icons.medical_services,
+                                  readOnly: false,
+                                  initialValue: profiles.condisease,
+                                  onSaved: (val) =>
+                                      profiles.condisease = val ?? ""),
+                              const SizedBox(height: 16),
+                              _buildTextField(
+                                  label: "ยาที่แพ้",
+                                  icon: Icons.warning_amber,
+                                  readOnly: false,
+                                  initialValue: profiles.allergic,
+                                  onSaved: (val) =>
+                                      profiles.allergic = val ?? ""),
+                              const SizedBox(height: 16),
+                              _buildTextField(
+                                  label: "อีเมล",
+                                  icon: Icons.email,
+                                  readOnly: true,
+                                  initialValue: profiles.email,
+                                  keyboardType: TextInputType.emailAddress,
+                                  onSaved: (val) => profiles.email = val ?? ""),
+                              const SizedBox(height: 16),
+                              _buildTextField(
+                                  label: "เบอร์ติดต่อ",
+                                  icon: Icons.call,
+                                  readOnly: false,
+                                  initialValue: profiles.phone,
+                                  keyboardType: TextInputType.phone,
+                                  onSaved: (val) => profiles.phone = val ?? ""),
+                              const SizedBox(height: 16),
+
+                              // วันเกิด
+                              TextFormField(
+                                controller: _birthdayController,
+                                decoration: InputDecoration(
+                                  labelText: 'วัน/เดือน/ปีเกิด',
+                                  prefixIcon: const Icon(
+                                    Icons.calendar_today,
+                                    color: Colors.teal,
                                   ),
-                                  const Text("หญิง"),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Radio<String>(
-                                    value: "อื่น ๆ",
-                                    groupValue: profiles.gender,
-                                    onChanged: (String? gender) {
-                                      setState(() {
-                                        profiles.gender = gender ?? '';
-                                      });
-                                    },
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
-                                  const Text("อื่น ๆ"),
-                                ],
+                                ),
+                                readOnly: true,
+                                onTap: () async {
+                                  DateTime? picked = await showDatePicker(
+                                    context: context,
+                                    initialDate: profiles.birthday,
+                                    firstDate: DateTime(1900),
+                                    lastDate: DateTime.now(),
+                                  );
+                                  if (picked != null) {
+                                    setState(() {
+                                      _birthdayController.text =
+                                          formatDateBuddhist(picked);
+                                      profiles.birthday = picked;
+                                    });
+                                  }
+                                },
                               ),
                             ],
                           ),
-                          const SizedBox(height: 16),
-
-                          // ชื่อ
-                          TextFormField(
-                            initialValue: profiles.name,
-                            onSaved: (String? name) {
-                              profiles.name = name ?? '';
-                            },
-                            validator:
-                                RequiredValidator(errorText: "กรุณากรอกชื่อ")
-                                    .call,
-                            decoration: InputDecoration(
-                              labelText: 'ชื่อ',
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12)),
-                              prefixIcon: const Icon(Icons.person),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-
-                          // นามสกุล
-                          TextFormField(
-                            initialValue: profiles.lastname,
-                            onSaved: (String? lastname) {
-                              profiles.lastname = lastname ?? '';
-                            },
-                            validator:
-                                RequiredValidator(errorText: "กรุณากรอกนามสกุล")
-                                    .call,
-                            decoration: InputDecoration(
-                              labelText: 'นามสกุล',
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12)),
-                              prefixIcon: const Icon(Icons.person),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-
-                          // ชื่อเล่น
-                          TextFormField(
-                            initialValue: profiles.nickname,
-                            onSaved: (String? nickname) {
-                              profiles.nickname = nickname ?? '';
-                            },
-                            validator: RequiredValidator(
-                                    errorText: "กรุณากรอกชื่อเล่น")
-                                .call,
-                            decoration: InputDecoration(
-                              labelText: 'ชื่อเล่น',
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12)),
-                              prefixIcon: const Icon(Icons.person),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-
-                          // โรคประจำตัว
-                          TextFormField(
-                            initialValue: profiles.condisease,
-                            onSaved: (String? condisease) {
-                              profiles.condisease = condisease ?? '';
-                            },
-                            validator: RequiredValidator(
-                                    errorText: "กรุณากรอกโรคประจำตัว")
-                                .call,
-                            decoration: InputDecoration(
-                              labelText: 'โรคประจำตัว',
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12)),
-                              prefixIcon: const Icon(Icons.medical_services),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-
-                          // ยาที่แพ้
-                          TextFormField(
-                            initialValue: profiles.allergic,
-                            onSaved: (String? allergic) {
-                              profiles.allergic = allergic ?? '';
-                            },
-                            validator: RequiredValidator(
-                                    errorText: "กรุณากรอกยาที่แพ้")
-                                .call,
-                            decoration: InputDecoration(
-                              labelText: 'ยาที่แพ้',
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12)),
-                              prefixIcon: const Icon(Icons.medication_liquid),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-
-                          // อีเมล
-                          TextFormField(
-                            initialValue: profiles.email,
-                            validator: MultiValidator([
-                              RequiredValidator(errorText: "กรุณากรอกอีเมล"),
-                              EmailValidator(
-                                  errorText:
-                                      "รูปแบบอีเมลไม่ถูกต้อง *@gmail.com")
-                            ]).call,
-                            onSaved: (String? email) {
-                              profiles.email = email ?? '';
-                            },
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                              labelText: 'อีเมล',
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12)),
-                              prefixIcon: const Icon(Icons.email),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-
-                          // เบอร์ติดต่อ
-                          TextFormField(
-                            initialValue: profiles.phone,
-                            keyboardType: TextInputType.number,
-                            onSaved: (String? phone) {
-                              profiles.phone = phone ?? '';
-                            },
-                            validator: RequiredValidator(
-                                    errorText: "กรุณากรอกเบอร์ติดต่อ")
-                                .call,
-                            decoration: InputDecoration(
-                              labelText: 'เบอร์ติดต่อ',
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12)),
-                              prefixIcon: const Icon(Icons.call),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-
-                          // วัน/เดือน/ปีเกิด
-                          TextFormField(
-                            controller: _birthdayController,
-                            validator: RequiredValidator(
-                                    errorText: "กรุณาเลือกวัน/เดือน/ปีเกิด")
-                                .call,
-                            decoration: InputDecoration(
-                              labelText: 'วัน/เดือน/ปีเกิด',
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12)),
-                              prefixIcon: const Icon(Icons.calendar_today),
-                            ),
-                            readOnly: true,
-                            onTap: () async {
-                              DateTime? picked = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime(2000),
-                                firstDate: DateTime(1900),
-                                lastDate: DateTime.now(),
-                              );
-                              if (picked != null) {
-                                setState(() {
-                                  _birthdayController.text =
-                                      DateFormat('dd/MM/yyyy').format(picked);
-                                  profiles.birthday = picked;
-                                });
-                              }
-                            },
-                          ),
-                          const SizedBox(height: 16),
-
-                          // ปุ่มบันทึก
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.redAccent,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 14),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              icon: const Icon(Icons.save, color: Colors.white),
-                              label: const Text(
-                                "บันทึกข้อมูล",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              onPressed: () async {
-                                if (formKey.currentState!.validate()) {
-                                  formKey.currentState!.save();
-                                  showLoadingDialog(context);
-
-                                  User? user =
-                                      FirebaseAuth.instance.currentUser;
-                                  if (user != null) {
-                                    if (_image != null) {
-                                      File compressedFile =
-                                          await compressImage(_image!);
-                                      profiles.imageUrl =
-                                          await uploadToCloudinary(
-                                              compressedFile);
-                                    }
-
-                                    try {
-                                      await FirebaseFirestore.instance
-                                          .collection('profiles')
-                                          .doc(user.uid)
-                                          .set(profiles.toMap(),
-                                              SetOptions(merge: true));
-                                      print(
-                                          "Profile saved/updated successfully!");
-                                    } catch (e) {
-                                      print("Error saving profile: $e");
-                                    }
-                                  } else {
-                                    print("User not logged in!");
-                                  }
-
-                                  print("name = ${profiles.name}");
-                                  print("Lastname = ${profiles.lastname}");
-                                  print("nickname = ${profiles.nickname}");
-                                  print("condisease = ${profiles.condisease}");
-                                  print("allergic = ${profiles.allergic}");
-                                  print("email = ${profiles.email}");
-                                  print("phone = ${profiles.phone}");
-                                  print("birthday = ${profiles.birthday}");
-                                  print("gender = ${profiles.gender}");
-                                  print("imageUrl = ${profiles.imageUrl}");
-
-                                  hideLoadingDialog(context);
-                                  // แถบโชว์ผลการทำงาน
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text("บันทึกเรียบร้อย: ")),
-                                  );
-                                }
-                              },
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: 20),
+
+                      // ปุ่มบันทึก
+                      SizedBox(
+                        width: double.infinity,
+                        child: //ปุ่ม
+                            ElevatedButton.icon(
+                          onPressed: () async {
+                            if (formKey.currentState!.validate()) {
+                              formKey.currentState!.save();
+                              showLoadingDialog(context);
+
+                              User? user = FirebaseAuth.instance.currentUser;
+                              if (user != null) {
+                                if (_image != null) {
+                                  File compressedFile =
+                                      await compressImage(_image!);
+                                  profiles.imageUrl =
+                                      await uploadToCloudinary(compressedFile);
+                                }
+
+                                try {
+                                  await FirebaseFirestore.instance
+                                      .collection('profiles')
+                                      .doc(user.uid)
+                                      .set(profiles.toMap(),
+                                          SetOptions(merge: true));
+                                  print("Profile saved/updated successfully!");
+                                } catch (e) {
+                                  print("Error saving profile: $e");
+                                }
+                              } else {
+                                print("User not logged in!");
+                              }
+
+                              hideLoadingDialog(context);
+                              showCustomToastUser(context, "บันทึกเรียบร้อย");
+                              Navigator.pop(context);
+                            } else {
+                              showCustomToastUserErrors(
+                                  context, "เกิดข้อผิดพลาด");
+                            }
+                          },
+                          icon: const Icon(Icons.save,
+                              color: Colors.white, size: 28),
+                          label: const Text(
+                            'แก้ไข & บันทึก',
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.teal,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            elevation: 8,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -509,6 +445,50 @@ class _EditProfileState extends State<EditProfile> {
           },
         );
       },
+    );
+  }
+
+  Widget _genderOption(String gender) {
+    return Row(
+      children: [
+        Radio<String>(
+          value: gender,
+          // ignore: deprecated_member_use
+          groupValue: profiles.gender,
+          activeColor: Colors.teal,
+          // ignore: deprecated_member_use
+          onChanged: (val) {
+            setState(() => profiles.gender = val ?? '');
+          },
+        ),
+        Text(
+          gender,
+          style: TextStyle(fontSize: 16),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTextField({
+    required String label,
+    required IconData icon,
+    required String initialValue,
+    required bool readOnly,
+    required FormFieldSetter<String> onSaved,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return TextFormField(
+      style: TextStyle(fontSize: 16),
+      initialValue: initialValue,
+      readOnly: readOnly,
+      onSaved: onSaved,
+      validator: RequiredValidator(errorText: "กรุณากรอก $label").call,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: Colors.teal),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      ),
     );
   }
 }

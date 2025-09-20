@@ -49,7 +49,7 @@ class Profiles {
       phone: map['phone'] ?? '',
       birthday: DateTime.tryParse(map['birthday'] ?? '') ?? DateTime.now(),
       gender: map['gender'] ?? '',
-      imageUrl: map['imageUrl'],
+      imageUrl: map['imageUrl'] ?? '',
     );
   }
 }

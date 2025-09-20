@@ -14,18 +14,6 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
-  Profiles profiles = Profiles(
-    name: '',
-    lastname: '',
-    nickname: '',
-    condisease: '',
-    allergic: '',
-    email: '',
-    phone: '',
-    birthday: DateTime.now(),
-    gender: 'ชาย',
-    imageUrl: '',
-  );
 
   Stream<Profiles?> streamProfile() {
     User? user = FirebaseAuth.instance.currentUser;
@@ -43,8 +31,6 @@ class _ProfilePageState extends State<ProfilePage> {
   int calculateAge(DateTime birthday) {
     DateTime today = DateTime.now();
     int age = today.year - birthday.year;
-
-    // ถ้าวันเดือนเกิดยังไม่ถึงในปีนี้ ให้ลดลง 1
     if (today.month < birthday.month ||
         (today.month == birthday.month && today.day < birthday.day)) {
       age--;
@@ -53,11 +39,9 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   String formatThaiDate(DateTime date) {
-    // เปลี่ยนปีเป็น พ.ศ.
     final thaiYear = date.year + 543;
     final day = date.day.toString().padLeft(2, '0');
     final month = date.month.toString().padLeft(2, '0');
-
     return '$day/$month/$thaiYear';
   }
 
@@ -68,21 +52,14 @@ class _ProfilePageState extends State<ProfilePage> {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Scaffold(
-            appBar: AppBar(
-              title: const Text("Error"),
-            ),
-            body: Center(
-              child: Text("${snapshot.error}"),
-            ),
+            appBar: AppBar(title: const Text("Error")),
+            body: Center(child: Text("${snapshot.error}")),
           );
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // กำลังโหลด
           return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
+            body: Center(child: CircularProgressIndicator()),
           );
         }
 
@@ -97,41 +74,66 @@ class _ProfilePageState extends State<ProfilePage> {
             }
 
             Profiles profiles = snapshot.data!;
-            // // snapshot สำเร็จ
             return Scaffold(
               appBar: AppBar(
-                title: const Text('ข้อมูลส่วนตัว'),
-                centerTitle: true,
-                titleTextStyle: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                  color: Colors.black,
+                elevation: 8,
+                backgroundColor: Colors.teal.shade600,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(24),
+                  ),
                 ),
-                backgroundColor: Colors.redAccent,
+                title: const Text(
+                  'โปรไฟล์',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    letterSpacing: 1.0,
+                  ),
+                ),
+                centerTitle: true,
                 automaticallyImplyLeading: false,
                 actions: [
-                  IconButton(
-                    icon: const Padding(
-                      padding: EdgeInsets.only(right: 10),
-                      child: Icon(Icons.edit),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(right: 16, top: 8, bottom: 8),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: const LinearGradient(
+                          colors: [Colors.blue, Colors.teal],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black38,
+                            blurRadius: 6,
+                            offset: Offset(2, 4),
+                          ),
+                        ],
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.edit,
+                            color: Colors.white, size: 25),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const EditProfile()),
+                          );
+                        },
+                      ),
                     ),
-                    iconSize: 35,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const EditProfile()),
-                      );
-                    },
                   ),
                 ],
               ),
               body: SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ส่วนหัวโปรไฟล์
+                    // รูปโปรไฟล์
                     Center(
                       child: Column(
                         children: [
@@ -151,16 +153,18 @@ class _ProfilePageState extends State<ProfilePage> {
                           const SizedBox(height: 16),
                           Text(
                             '${profiles.name} ${profiles.lastname}',
-                            style: TextStyle(
-                              fontSize: 24,
+                            style: const TextStyle(
+                              fontSize: 26,
                               fontWeight: FontWeight.bold,
+                              color: Colors.black87,
                             ),
                           ),
+                          const SizedBox(height: 4),
                           Text(
                             'อายุ: ${calculateAge(profiles.birthday)} ปี | เพศ: ${profiles.gender}',
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.grey[600],
+                              color: Colors.grey[700],
                             ),
                           ),
                         ],
@@ -170,23 +174,41 @@ class _ProfilePageState extends State<ProfilePage> {
 
                     // ข้อมูลส่วนตัว
                     _buildProfileSection(
+                      icon: Icons.person,
                       title: 'ข้อมูลส่วนตัว',
                       children: [
-                        _buildProfileItem('ชื่อเล่น', '${profiles.nickname} '),
-                        _buildProfileItem('วัน/เดือน/ปีเกิด',
+                        _buildProfileItem(
+                            Icons.face,
+                            'ชื่อเล่น',
+                            profiles.nickname.isEmpty
+                                ? "-"
+                                : profiles.nickname),
+                        _buildProfileItem(Icons.cake, 'วัน/เดือน/ปีเกิด',
                             formatThaiDate(profiles.birthday)),
-                        _buildProfileItem('อีเมล', '${profiles.email} '),
-                        _buildProfileItem('เบอร์ติดต่อ', '${profiles.phone} '),
+                        _buildProfileItem(Icons.email, 'อีเมล',
+                            profiles.email.isEmpty ? "-" : profiles.email),
+                        _buildProfileItem(Icons.phone, 'เบอร์ติดต่อ',
+                            profiles.phone.isEmpty ? "-" : profiles.phone),
                       ],
                     ),
 
                     // ข้อมูลสุขภาพ
                     _buildProfileSection(
+                      icon: Icons.favorite,
                       title: 'ข้อมูลสุขภาพ',
                       children: [
                         _buildProfileItem(
-                            'โรคประจำตัว', '${profiles.condisease} '),
-                        _buildProfileItem('ยาที่แพ้', '${profiles.allergic} '),
+                            Icons.healing,
+                            'โรคประจำตัว',
+                            profiles.condisease.isEmpty
+                                ? "-"
+                                : profiles.condisease),
+                        _buildProfileItem(
+                            Icons.warning,
+                            'ยาที่แพ้',
+                            profiles.allergic.isEmpty
+                                ? "-"
+                                : profiles.allergic),
                       ],
                     ),
                   ],
@@ -199,27 +221,37 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildProfileSection(
-      {required String title, required List<Widget> children}) {
+  Widget _buildProfileSection({
+    required IconData icon,
+    required String title,
+    required List<Widget> children,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.redAccent,
-          ),
+        Row(
+          children: [
+            Icon(icon, color: Colors.teal, size: 22),
+            const SizedBox(width: 8),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.teal, // ✅ เปลี่ยนจากแดงเป็นเขียว
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 8),
         Card(
           elevation: 3,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: children,
-            ),
+            child: Column(children: children),
           ),
         ),
         const SizedBox(height: 24),
@@ -227,26 +259,59 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildProfileItem(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.grey,
+  Widget _buildProfileItem(IconData icon, String label, String value) {
+    return Card(
+      elevation: 5,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          children: [
+            // วงกลมสำหรับ Icon
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: const BoxDecoration(
+                color: Color(0xFFE0F2F1), // ✅ teal อ่อน
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                color: Colors.teal,
+                size: 22,
+              ),
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 16),
-          ),
-          const Divider(),
-        ],
+            const SizedBox(width: 16),
+
+            // Label + Value
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    value.isNotEmpty ? value : "ไม่มีข้อมูล",
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
