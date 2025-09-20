@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:heartcare_plus/connection_check.dart';
 import 'package:heartcare_plus/login/authcheck.dart';
 
 import 'pages/insertpage/medicine/notification_service.dart';
@@ -9,7 +10,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
   await NotificationService.init();
 
-  runApp(const MyApp());
+  runApp(ConnectionCheck());
 }
 
 class MyApp extends StatelessWidget {
