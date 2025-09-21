@@ -625,7 +625,7 @@ class _HomePageState extends State<HomePage> {
                                                   const Divider(),
                                                   _dataOther(
                                                       'ค่าดัชนีมวลกาย (BMI)',
-                                                      '$persuresBmi kg/m² || $persuresBmiDetail\nข้อมูลเมื่อ $persuresBmiTime'),
+                                                      '$persuresBmi kg/m² || $persuresBmiDetail\nข้อมูลเมื่อ\n$persuresBmiTime'),
                                                   // เพิ่มได้เรื่อย ๆ
                                                 ],
                                               ),

@@ -62,32 +62,9 @@ class _LoginpageState extends State<Loginpage> {
                   const SizedBox(height: 60),
 
                   // โลโก้หัวใจ
-                  Container(
-                    width: 90,
-                    height: 90,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [Colors.red.shade400, Colors.pink.shade300],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          // ignore: deprecated_member_use
-                          color: Colors.red.shade200.withOpacity(0.4),
-                          blurRadius: 12,
-                          offset: const Offset(0, 6),
-                        ),
-                      ],
-                    ),
-                    child: const Center(
-                      child: Icon(
-                        Icons.favorite,
-                        color: Colors.white,
-                        size: 55,
-                      ),
-                    ),
+                  Image.asset(
+                    'assets/logoui.png',
+                    height: 160,
                   ),
 
                   const SizedBox(height: 20),

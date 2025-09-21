@@ -261,7 +261,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildProfileItem(IconData icon, String label, String value) {
     return Card(
-      elevation: 5,
+      elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),

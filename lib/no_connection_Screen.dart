@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -22,12 +23,16 @@ class NoConnectionScreen extends StatelessWidget {
                 Lottie.asset("assets/lottie/No Internet.json",
                     fit: BoxFit.cover),
                 SizedBox(height: 30),
-                Text(
-                  "ไม่มีการเชื่อมต่ออินเทอร์เน็ต",
-                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
+                AutoSizeText(
+                  'ไม่มีการเชื่อมต่ออินเทอร์เน็ต',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                  maxLines: 1,
+                  minFontSize: 20,
+                  maxFontSize: 28,
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 16),

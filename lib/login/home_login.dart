@@ -16,37 +16,6 @@ class HomeLogin extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // โลโก้หัวใจ
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    colors: [Colors.red.shade400, Colors.pink.shade300],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      // ignore: deprecated_member_use
-                      color: Colors.red.shade200.withOpacity(0.4),
-                      blurRadius: 12,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
-                ),
-                child: const Center(
-                  child: Icon(
-                    Icons.favorite,
-                    color: Colors.white,
-                    size: 55,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
               // ชื่อแอป
               const Text(
                 'HeartCarePlus',
@@ -62,7 +31,7 @@ class HomeLogin extends StatelessWidget {
               const SizedBox(height: 16),
 
               Image.asset(
-                'assets/img/doctor.png',
+                'assets/logoui.png',
                 height: 160,
               ),
 
