@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -151,13 +152,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                 : null,
                           ),
                           const SizedBox(height: 16),
-                          Text(
+                          AutoSizeText(
                             '${profiles.name} ${profiles.lastname}',
                             style: const TextStyle(
                               fontSize: 26,
                               fontWeight: FontWeight.bold,
                               color: Colors.black87,
                             ),
+                            maxLines: 1,
+                            minFontSize: 20,
+                            maxFontSize: 26,
                           ),
                           const SizedBox(height: 4),
                           Text(
@@ -299,13 +303,16 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Text(
+                  AutoSizeText(
                     value.isNotEmpty ? value : "ไม่มีข้อมูล",
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
                       color: Colors.grey,
                     ),
+                    maxLines: 1,
+                    minFontSize: 14,
+                    maxFontSize: 16,
                   ),
                 ],
               ),

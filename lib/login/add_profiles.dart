@@ -618,29 +618,111 @@ class _AddProfilesState extends State<AddProfiles> {
                                         color: Colors.redAccent,
                                         icon: Icons.logout,
                                         onPressed: () async {
-                                          showDialog(
+                                          // แสดง dialog ยืนยันก่อนออกจากระบบ
+                                          bool? confirm = await showDialog(
                                             context: context,
-                                            barrierDismissible: false,
-                                            builder: (context) {
-                                              return const Center(
-                                                  child:
-                                                      CircularProgressIndicator());
-                                            },
+                                            builder: (context) => AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              backgroundColor: Colors.white,
+                                              elevation: 8,
+                                              title: const Text(
+                                                "ยืนยันการออกจากระบบ",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20,
+                                                  color: Colors.redAccent,
+                                                ),
+                                              ),
+                                              content: const Text(
+                                                "คุณต้องการออกจากระบบหรือไม่?",
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.black87),
+                                              ),
+                                              actionsAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              actions: [
+                                                ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        Colors.grey.shade300,
+                                                    foregroundColor:
+                                                        Colors.black87,
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 20,
+                                                        vertical: 12),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
+                                                    ),
+                                                    elevation: 4,
+                                                  ),
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          context, false),
+                                                  child: const Text(
+                                                    "ยกเลิก",
+                                                    style:
+                                                        TextStyle(fontSize: 16),
+                                                  ),
+                                                ),
+                                                ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        Colors.redAccent,
+                                                    foregroundColor:
+                                                        Colors.white,
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 20,
+                                                        vertical: 12),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
+                                                    ),
+                                                    elevation: 4,
+                                                  ),
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          context, true),
+                                                  child: const Text(
+                                                    "ตกลง",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           );
-                                          await Future.delayed(
-                                              const Duration(seconds: 2));
-                                          Navigator.pop(context);
-                                          await FirebaseAuth.instance
-                                              .signOut()
-                                              .then((value) async {
-                                            Navigator.pushAndRemoveUntil(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const HomeLogin()),
-                                              (route) => false,
-                                            );
-                                          });
+
+                                          if (confirm == true) {
+                                            await FirebaseAuth.instance
+                                                .signOut()
+                                                .then((value) async {
+                                              await NotificationService()
+                                                  .cancelAllNotifications();
+                                              showCustomToastUser(context,
+                                                  "ออกจากระบบเรียบร้อย");
+                                              Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const HomeLogin()),
+                                                  (route) => false);
+                                            });
+                                          }
                                         },
                                       ),
                                     ],

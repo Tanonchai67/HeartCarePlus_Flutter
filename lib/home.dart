@@ -466,7 +466,7 @@ class _HomePageState extends State<HomePage> {
                                                         size: 22),
                                                     const SizedBox(width: 6),
                                                     AutoSizeText(
-                                                      "$appointmentTime || วันที่ $appointmentDate",
+                                                      "$appointmentTime ||  $appointmentDate",
                                                       style: const TextStyle(
                                                         fontSize: 18,
                                                         fontWeight:
@@ -474,6 +474,7 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                       maxLines: 1,
                                                       minFontSize: 16,
+                                                      maxFontSize: 18,
                                                       overflow:
                                                           TextOverflow.ellipsis,
                                                     ),

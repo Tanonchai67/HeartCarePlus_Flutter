@@ -17,7 +17,7 @@ class NotificationService {
     tz.setLocalLocation(tz.getLocation('Asia/Bangkok'));
 
     const AndroidInitializationSettings androidInit =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/launcher_icon');
 
     const InitializationSettings initSettings =
         InitializationSettings(android: androidInit);
@@ -83,7 +83,7 @@ class NotificationService {
             vibrationPattern:
                 Int64List.fromList([0, 500, 200, 500]), // รูปแบบสั่น
 
-            color: const Color(0xFF2196F3), // สีพื้นหลังของ icon
+            color: Colors.blue, // สีพื้นหลังของ icon
 
             styleInformation: BigTextStyleInformation(
               'โปรดรับประทานยาตามเวลาที่กำหนด เพื่อสุขภาพที่ดี', // ข้อความยาว
